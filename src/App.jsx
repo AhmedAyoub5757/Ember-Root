@@ -1,0 +1,28 @@
+import { Routes, Route, useParams } from "react-router-dom";
+import Layout from "./components/layout/Layout";
+
+const Placeholder = ({ title }) => (
+  <section className="px-8 py-24">
+    <p className="label opacity-60">Placeholder</p>
+    <h1 className="display mt-4 text-7xl">{title}</h1>
+  </section>
+);
+
+const Flavor = () => <Placeholder title={`Flavor: ${useParams().id}`} />;
+
+export default function App() {
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<div className="h-[200vh] px-8 py-24"><Placeholder title="Hero goes here" /></div>} />
+        <Route path="/shop" element={<Placeholder title="Shop" />} />
+        <Route path="/shop/:type" element={<Placeholder title="Shop category" />} />
+        <Route path="/flavor/:id" element={<Flavor />} />
+        <Route path="/story" element={<Placeholder title="Story" />} />
+        <Route path="/ingredients" element={<Placeholder title="Ingredients" />} />
+        <Route path="/contact" element={<Placeholder title="Contact" />} />
+        <Route path="/heat-guide" element={<Placeholder title="Heat guide" />} />
+      </Route>
+    </Routes>
+  );
+}
