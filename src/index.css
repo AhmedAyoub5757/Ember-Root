@@ -123,3 +123,6 @@ body::after {
   line-height: 1.06;
   letter-spacing: -0.02em;
 }
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
