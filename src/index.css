@@ -126,3 +126,23 @@ body::after {
 
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ---------- Crock ---------- */
+@keyframes wave { to { transform: translateX(-100px); } }
+.wave { animation: wave 5s linear infinite; }
+
+@keyframes bubble {
+  0%   { transform: translateY(0); opacity: 0; }
+  12%  { opacity: .85; }
+  85%  { opacity: .55; }
+  100% { transform: translateY(var(--rise)); opacity: 0; }
+}
+.bubble {
+  animation: bubble var(--s, 5s) ease-in infinite;
+  animation-delay: var(--d, 0s);
+  animation-fill-mode: backwards; /* hides bubbles during their delay */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave, .bubble { animation: none; }
+}

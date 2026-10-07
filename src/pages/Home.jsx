@@ -3,7 +3,7 @@ import FlavorIndex from "../components/sections/FlavorIndex";
 import Story from "../components/story/Story";
 import Ingredients from "../components/ingredients/Ingredients";
 import Letters from "../components/letters/Letters";
-import NewsletterFooter from "../components/footer/NewsletterFooter";
+import Newsletter from "../components/newsletter/Newsletter";
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
       <Story />
       <Ingredients />
       <Letters />
-      <NewsletterFooter />
+      <Newsletter />
     </>
   );
 }
