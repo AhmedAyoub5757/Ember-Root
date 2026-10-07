@@ -2,6 +2,7 @@ import Hero from "../components/hero/Hero";
 import FlavorIndex from "../components/sections/FlavorIndex";
 import Story from "../components/story/Story";
 import Ingredients from "../components/ingredients/Ingredients";
+import Letters from "../components/letters/Letters";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <FlavorIndex />
       <Story />
       <Ingredients />
+      <Letters />
     </>
   );
 }
