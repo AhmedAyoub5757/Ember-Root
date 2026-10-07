@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { animate, motion, useMotionValue, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import { flavors } from "../../data/products";
 import { useCart } from "../../store/cart";
-import { inkFor } from "../../lib/color";
+import { inkFor, mixColors, parseColor } from "../../lib/color";
+import { heroBg, heroInk, useHeroTheme } from "../../store/heroTheme";
 import logo from "../../assets/images/logo.png";
 import MegaMenu from "./MegaMenu";
 import MobileMenu from "./MobileMenu";
@@ -55,6 +56,23 @@ export default function Navbar() {
   const [hidden, setHidden] = useState(false);
   const location = useLocation();
   const count = useCart((s) => s.items.reduce((n, i) => n + i.qty, 0));
+  const inView = useHeroTheme((s) => s.inView);
+  const heroMix = useMotionValue(0);
+  const megaMix = useMotionValue(0);
+  const megaBg = useMotionValue(active.color);
+  const megaInk = useMotionValue(inkFor(active.color));
+  const navBg = useTransform(
+    [heroBg, heroMix, megaBg, megaMix],
+    ([h, hm, mb, mm]) => mixColors(mixColors(PAPER, h, hm), mb, mm),
+  );
+  const navInk = useTransform(
+    [heroInk, heroMix, megaInk, megaMix],
+    ([h, hm, mi, mm]) => mixColors(mixColors(SOIL, h, hm), mi, mm),
+  );
+  const [lightInk, setLightInk] = useState(() => {
+    const [r, g, b] = parseColor(navInk.get());
+    return (0.299 * r + 0.587 * g + 0.114 * b) / 255 <= 0.55;
+  });
 
   const { scrollY } = useScroll();
   useMotionValueEvent(scrollY, "change", (y) => {
@@ -68,16 +86,37 @@ export default function Navbar() {
     setMobileOpen(false);
   }, [location.pathname]);
 
+  useEffect(() => {
+    const controls = animate(heroMix, inView && !megaOpen ? 1 : 0, { duration: 0.4 });
+    return () => controls.stop();
+  }, [heroMix, inView, megaOpen]);
+
+  useEffect(() => {
+    const controls = animate(megaMix, megaOpen ? 1 : 0, { duration: 0.45 });
+    return () => controls.stop();
+  }, [megaMix, megaOpen]);
+
+  useEffect(() => {
+    const bgControls = animate(megaBg, active.color, { duration: 0.45 });
+    const inkControls = animate(megaInk, inkFor(active.color), { duration: 0.45 });
+    return () => {
+      bgControls.stop();
+      inkControls.stop();
+    };
+  }, [active, megaBg, megaInk]);
+
+  useMotionValueEvent(navInk, "change", (value) => {
+    const [r, g, b] = parseColor(value);
+    const next = (0.299 * r + 0.587 * g + 0.114 * b) / 255 <= 0.55;
+    setLightInk((current) => (current === next ? current : next));
+  });
+
   // close on Escape
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && setMegaOpen(false);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
-
-  const bg = megaOpen ? active.color : PAPER;
-  const ink = megaOpen ? inkFor(active.color) : SOIL;
-  const lightInk = ink === PAPER;
 
   return (
     <>
@@ -90,8 +129,7 @@ export default function Navbar() {
         <Ticker />
 
         <motion.div
-          animate={{ backgroundColor: bg, color: ink }}
-          transition={{ duration: 0.45, ease: "easeOut" }}
+          style={{ backgroundColor: navBg, color: navInk }}
           className="hair-b"
         >
           <div className="mx-auto flex h-[72px] max-w-[1400px] items-stretch px-5 lg:px-8">
@@ -167,7 +205,7 @@ export default function Navbar() {
             open={megaOpen}
             active={active}
             setActive={setActive}
-            ink={ink}
+            ink={inkFor(active.color)}
             close={() => setMegaOpen(false)}
           />
         </motion.div>

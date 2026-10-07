@@ -92,3 +92,11 @@ body::after {
 @media (prefers-reduced-motion: reduce) {
   .drift, .bottle-float { animation: none; }
 }
+
+/* Softer display style for long headings (line-height 1.06 instead of .92) */
+.display-s {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 72, "SOFT" 50;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}

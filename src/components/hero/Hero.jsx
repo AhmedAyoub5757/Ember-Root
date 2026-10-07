@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { animate, motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
+import { animate, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import { heroSlides } from "../../data/hero";
 import { inkFor, mixHex } from "../../lib/color";
+import { heroBg, heroInk, useHeroTheme } from "../../store/heroTheme";
 import { N, mod } from "./math";
 import Backdrop from "./Backdrop";
 import Stage from "./Stage";
@@ -38,9 +39,14 @@ export default function Hero() {
   const [auto, setAuto] = useState(true);
   const [dragging, setDragging] = useState(false);
   const [inView, setInView] = useState(true);
+  const setHeroInView = useHeroTheme((s) => s.setInView);
+  const setActiveIndex = useHeroTheme((s) => s.setActiveIndex);
 
   const bg = useTransform(pos, bgAt);
   const ink = useTransform(pos, inkAt);
+
+  useMotionValueEvent(bg, "change", (v) => heroBg.set(v));
+  useMotionValueEvent(ink, "change", (v) => heroInk.set(v));
 
   // pointer parallax
   const mx = useMotionValue(0);
@@ -86,6 +92,16 @@ export default function Hero() {
   useEffect(() => { if (!auto) progress.set(0); }, [auto, progress]);
 
   useEffect(() => {
+    heroBg.set(bg.get());
+    heroInk.set(ink.get());
+    return () => setHeroInView(false);
+  }, [bg, ink, setHeroInView]);
+
+  useEffect(() => {
+    setActiveIndex(active);
+  }, [active, setActiveIndex]);
+
+  useEffect(() => {
     if (!auto || dragging || !inView) return;
     let raf;
     let last = performance.now();
@@ -105,6 +121,15 @@ export default function Hero() {
     io.observe(root.current);
     return () => io.disconnect();
   }, []);
+
+  useEffect(() => {
+    const io = new IntersectionObserver(([entry]) => setHeroInView(entry.isIntersecting), {
+      rootMargin: "-104px 0px 0px 0px",
+      threshold: 0,
+    });
+    io.observe(root.current);
+    return () => io.disconnect();
+  }, [setHeroInView]);
 
   useEffect(() => {
     if (!inView) return;
