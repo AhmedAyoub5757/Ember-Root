@@ -185,7 +185,7 @@ export default function Hero() {
       style={{ backgroundColor: bg, color: ink, touchAction: "pan-y" }}
       className="hero-root relative h-[calc(100svh-104px)] min-h-[640px] select-none overflow-hidden"
     >
-      <Backdrop pos={pos} smx={smx} smy={smy} />
+      <Backdrop pos={pos} smx={smx} />
       <Stage pos={pos} smx={smx} smy={smy} onBottle={onBottle} />
       <Embers ref={embers} ink={ink} run={inView} />
 

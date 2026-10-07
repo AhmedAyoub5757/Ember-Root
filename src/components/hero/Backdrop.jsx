@@ -33,17 +33,9 @@ function Title({ slide, k, pos, smx }) {
   );
 }
 
-export default function Backdrop({ pos, smx, smy }) {
-  const dx = useTransform(smx, (v) => v * -16);
-  const dy = useTransform(smy, (v) => v * -10);
-
+export default function Backdrop({ pos, smx }) {
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
-      {/* sun disc */}
-      <div className="absolute inset-0 grid place-items-center pb-[26%] lg:pb-0">
-        <motion.div style={{ x: dx, y: dy }} className="aspect-square h-[68%] rounded-full bg-current opacity-[0.07]" />
-      </div>
-
       {heroSlides.map((s, k) => (
         <Title key={s.id} slide={s} k={k} pos={pos} smx={smx} />
       ))}

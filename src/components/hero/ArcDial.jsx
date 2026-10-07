@@ -46,12 +46,12 @@ export default function ArcDial({ pos, progress, onJump, scrub }) {
   return (
     <div
       data-dial
-      className="absolute right-0 top-1/2 z-30 origin-right -translate-y-1/2 scale-[0.72] md:scale-100"
+      className="absolute right-0 top-1/2 z-30 hidden origin-right -translate-y-1/2 scale-[0.72] md:block md:scale-100"
       style={{ width: W, height: H }}
     >
       <motion.div
         className="absolute inset-0 cursor-grab touch-none active:cursor-grabbing"
-        style={{ scaleX: -1 }}
+        style={{ scaleX: -1, x: 8 }}
         onPanStart={() => scrub.start()}
         onPan={(_, i) => scrub.move(-i.offset.y / 90)}
         onPanEnd={(_, i) => scrub.end(-i.velocity.y / 90)}
