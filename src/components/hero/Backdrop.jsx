@@ -36,49 +36,12 @@ function Title({ slide, k, pos, smx }) {
 export default function Backdrop({ pos, smx, smy }) {
   const dx = useTransform(smx, (v) => v * -16);
   const dy = useTransform(smy, (v) => v * -10);
-  const rotate = useTransform(pos, (p) => p * -60);
 
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
       {/* sun disc */}
       <div className="absolute inset-0 grid place-items-center pb-[26%] lg:pb-0">
         <motion.div style={{ x: dx, y: dy }} className="aspect-square h-[68%] rounded-full bg-current opacity-[0.07]" />
-      </div>
-
-      {/* instrument ring: turns as you move, active number sits at 12 o'clock */}
-      <div className="absolute inset-0 grid place-items-center pb-[26%] lg:pb-0">
-        <motion.svg
-          viewBox="-100 -100 200 200"
-          style={{ rotate }}
-          className="aspect-square h-[94%] max-w-[130vw] opacity-40"
-          fill="none"
-          stroke="currentColor"
-        >
-          <circle r="98" strokeWidth=".3" />
-          {Array.from({ length: 120 }, (_, i) => (
-            <line
-              key={i}
-              y1="-98"
-              y2={i % 5 === 0 ? -93 : -95.5}
-              transform={`rotate(${i * 3})`}
-              strokeWidth={i % 5 === 0 ? 0.5 : 0.25}
-            />
-          ))}
-          {heroSlides.map((s, k) => (
-            <text
-              key={s.id}
-              y="-84"
-              transform={`rotate(${k * 60})`}
-              textAnchor="middle"
-              fontSize="4"
-              fill="currentColor"
-              stroke="none"
-              fontFamily="var(--font-mono)"
-            >
-              {s.no}
-            </text>
-          ))}
-        </motion.svg>
       </div>
 
       {heroSlides.map((s, k) => (

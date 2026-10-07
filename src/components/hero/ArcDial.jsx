@@ -1,6 +1,6 @@
 import { motion, useTransform } from "framer-motion";
 import { heroSlides } from "../../data/hero";
-import { N, clamp01, offset } from "./math";
+import { clamp01, offset } from "./math";
 
 // D-shape geometry: straight spine on the left, curve bulging right
 const W = 132, H = 360, CX = 8, CY = 180, RX = 92, RY = 164, PHI = 0.56;
@@ -18,8 +18,6 @@ function Marker({ k, name, pos, onJump }) {
   const opacity = useTransform(d, fadeOf);
   const near = useTransform(d, (v) => 1 - Math.min(Math.abs(v), 1));
   const dotScale = useTransform(near, (n) => 0.7 + n * 0.9);
-  const labelOpacity = useTransform(near, (n) => 0.4 + n * 0.6);
-  const labelX = useTransform(near, (n) => 10 + n * 6);
 
   return (
     <motion.button
@@ -31,9 +29,6 @@ function Marker({ k, name, pos, onJump }) {
     >
       <span className="absolute -left-4 -top-4 h-8 w-8" />
       <motion.span className="absolute -left-[3px] -top-[3px] h-[6px] w-[6px] rounded-full bg-current" style={{ scale: dotScale }} />
-      <motion.span className="label absolute -top-[7px] left-0" style={{ x: labelX, opacity: labelOpacity }}>
-        {String(k + 1).padStart(2, "0")}
-      </motion.span>
     </motion.button>
   );
 }
@@ -47,15 +42,16 @@ function Tick({ k, off, pos }) {
   return <motion.span className="absolute left-0 top-0 h-px w-[6px] origin-left bg-current" style={{ x, y, rotate, opacity }} />;
 }
 
-export default function ArcDial({ pos, progress, active, auto, setAuto, onJump, scrub }) {
+export default function ArcDial({ pos, progress, onJump, scrub }) {
   return (
     <div
       data-dial
-      className="absolute right-2 top-1/2 z-30 origin-right -translate-y-1/2 scale-[0.72] md:right-4 md:scale-100"
+      className="absolute right-0 top-1/2 z-30 origin-right -translate-y-1/2 scale-[0.72] md:scale-100"
       style={{ width: W, height: H }}
     >
       <motion.div
         className="absolute inset-0 cursor-grab touch-none active:cursor-grabbing"
+        style={{ scaleX: -1 }}
         onPanStart={() => scrub.start()}
         onPan={(_, i) => scrub.move(-i.offset.y / 90)}
         onPanEnd={(_, i) => scrub.end(-i.velocity.y / 90)}
@@ -87,19 +83,6 @@ export default function ArcDial({ pos, progress, active, auto, setAuto, onJump, 
         ))}
       </motion.div>
 
-      <p className="label pointer-events-none absolute -top-9 right-0 hidden opacity-50 md:block">Drag the arc</p>
-
-      <div className="label absolute -bottom-12 right-0 hidden items-center gap-3 md:flex">
-        <span>{String(active + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}</span>
-        <button
-          type="button"
-          aria-pressed={auto}
-          onClick={() => setAuto((a) => !a)}
-          className="border border-current px-2 py-1"
-        >
-          Auto {auto ? "●" : "○"}
-        </button>
-      </div>
     </div>
   );
 }

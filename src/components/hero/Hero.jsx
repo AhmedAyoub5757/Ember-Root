@@ -164,17 +164,10 @@ export default function Hero() {
       <Stage pos={pos} smx={smx} smy={smy} onBottle={onBottle} />
       <Embers ref={embers} ink={ink} run={inView} />
 
-      <p className="label pointer-events-none absolute left-5 top-6 z-30 opacity-70 lg:left-8 lg:top-8">
-        The Collection / Vol. 07<br />Six varieties, one field
-      </p>
-
-      <Caption slide={heroSlides[active]} bg={bg} ink={ink} />
+      <Caption slide={heroSlides[active]} />
       <ArcDial
         pos={pos}
         progress={progress}
-        active={active}
-        auto={auto}
-        setAuto={setAuto}
         onJump={jump}
         scrub={scrub}
       />
