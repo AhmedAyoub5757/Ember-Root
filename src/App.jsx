@@ -1,5 +1,7 @@
 import { Routes, Route, useParams } from "react-router-dom";
 import Layout from "./components/layout/Layout";
+import Home from "./pages/Home";
+
 
 const Placeholder = ({ title }) => (
   <section className="px-8 py-24">
@@ -14,7 +16,8 @@ export default function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/" element={<div className="h-[200vh] px-8 py-24"><Placeholder title="Hero goes here" /></div>} />
+        {/* <Route path="/" element={<div className="h-[200vh] px-8 py-24"><Placeholder title="Hero goes here" /></div>} /> */}
+        <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Placeholder title="Shop" />} />
         <Route path="/shop/:type" element={<Placeholder title="Shop category" />} />
         <Route path="/flavor/:id" element={<Flavor />} />

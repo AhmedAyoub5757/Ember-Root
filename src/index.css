@@ -57,3 +57,38 @@ body::after {
 
 @keyframes marquee { to { transform: translateX(-50%); } }
 .marquee { animation: marquee 45s linear infinite; } 
+
+/* ---------- Hero ---------- */
+.hero-root {
+  --u: 1px;                              /* unit for prop sizes */
+  --title-size: min(17vw, 33svh);
+}
+@media (max-width: 767px) {
+  .hero-root { --u: 0.62px; --title-size: min(21vw, 22svh); }
+}
+
+@keyframes drift {
+  0% {
+    transform: translate3d(calc(var(--dx) * -1), calc(var(--dy) * -1), calc(var(--dz) * -1))
+      rotateZ(calc(var(--dr) * -1)) rotateX(calc(var(--drx) * -1));
+  }
+  100% {
+    transform: translate3d(var(--dx), var(--dy), var(--dz))
+      rotateZ(var(--dr)) rotateX(var(--drx));
+  }
+}
+.drift {
+  animation: drift var(--dur, 9s) ease-in-out infinite alternate;
+  animation-delay: var(--delay, 0s);
+  will-change: transform;
+}
+
+@keyframes bottleFloat {
+  0%, 100% { transform: translateY(-1.2%) rotate(-0.5deg); }
+  50%      { transform: translateY(1.2%) rotate(0.5deg); }
+}
+.bottle-float { animation: bottleFloat 7s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .drift, .bottle-float { animation: none; }
+}
