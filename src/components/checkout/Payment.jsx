@@ -1,0 +1,107 @@
+import { AnimatePresence, motion } from "framer-motion";
+import { methods } from "../../data/checkout";
+import { COD_FEE, fmt } from "../../lib/money";
+import Field from "./Field";
+
+const ease = [0.2, 0.7, 0.2, 1];
+
+export default function Payment({ method, setMethod, country, bind }) {
+  const list = methods.filter((m) => !m.pkOnly || country === "PK");
+
+  const onKey = (e) => {
+    const fwd = e.key === "ArrowDown" || e.key === "ArrowRight";
+    const back = e.key === "ArrowUp" || e.key === "ArrowLeft";
+    if (!fwd && !back) return;
+    e.preventDefault();
+    const i = list.findIndex((m) => m.id === method);
+    const next = list[(i + (fwd ? 1 : -1) + list.length) % list.length];
+    setMethod(next.id);
+    document.getElementById(`pay-${next.id}`)?.focus();
+  };
+
+  const panel = {
+    card: (
+      <div className="border border-dashed border-soil/50 p-5">
+        <p className="label opacity-70">Secure card form</p>
+        <p className="mt-2 max-w-[46ch] text-sm leading-relaxed">
+          Card details are typed into Stripe's own secure fields, never into ours.
+          They appear here once payments are connected.
+        </p>
+      </div>
+    ),
+    paypal: (
+      <p className="max-w-[46ch] text-sm leading-relaxed">
+        You'll be sent to PayPal to approve the payment, then brought straight back here.
+      </p>
+    ),
+    easypaisa: (
+      <Field
+        label="Easypaisa mobile number"
+        type="tel"
+        inputMode="tel"
+        autoComplete="tel"
+        placeholder="0300 1234567"
+        hint="The number linked to your Easypaisa account. You'll approve the payment in the app."
+        {...bind("wallet")}
+      />
+    ),
+    cod: (
+      <p className="max-w-[46ch] text-sm leading-relaxed">
+        Pay in cash when the parcel arrives.
+        {COD_FEE > 0 && <> A {fmt(COD_FEE)} handling fee applies.</>} Please keep the exact amount ready.
+      </p>
+    ),
+  };
+
+  return (
+    <div>
+      <div role="radiogroup" aria-label="Payment method" onKeyDown={onKey}>
+        {list.map((m, i) => {
+          const on = m.id === method;
+          return (
+            <button
+              key={m.id}
+              id={`pay-${m.id}`}
+              type="button"
+              role="radio"
+              aria-checked={on}
+              tabIndex={on ? 0 : -1}
+              onClick={() => setMethod(m.id)}
+              className="hair relative grid w-full min-w-0 grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-x-2 px-3 py-4 text-left transition-colors duration-300 sm:gap-x-3"
+              style={on ? { color: "#F2EBDD" } : undefined}
+            >
+              {on && (
+                <motion.span
+                  layoutId="pay-wipe"
+                  className="absolute inset-0 bg-soil"
+                  transition={{ duration: 0.4, ease }}
+                />
+              )}
+              <span className="label relative">{String(i + 1).padStart(2, "0")}</span>
+              <span className="relative">
+                <span className="display-s block text-2xl">{m.name}</span>
+                <span className="label mt-0.5 block opacity-70">{m.via}</span>
+              </span>
+              <span className="label relative whitespace-nowrap text-right opacity-70">
+                {m.id === "cod" && COD_FEE > 0 ? `+ ${fmt(COD_FEE)}` : "No fee"}
+              </span>
+            </button>
+          );
+        })}
+        <div className="hair" />
+      </div>
+
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={method}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0, transition: { duration: 0.4, ease } }}
+          exit={{ opacity: 0, transition: { duration: 0.15 } }}
+          className="mt-6"
+        >
+          {panel[method]}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+}

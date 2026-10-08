@@ -148,3 +148,10 @@ body::after {
 }
 
 html { scrollbar-gutter: stable; }
+
+/* Print the confirmation slip on its own */
+@media print {
+  header.fixed, footer, .no-print { display: none !important; }
+  body::after { display: none; }
+  main { padding-top: 0 !important; }
+}

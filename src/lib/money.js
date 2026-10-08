@@ -23,3 +23,15 @@ export function totals(items) {
   const ship = sub === 0 || sub >= FREE_SHIP ? 0 : SHIP_FEE;
   return { sub, count, ship, total: sub + ship, left: Math.max(0, FREE_SHIP - sub) };
 }
+
+export const COD_FEE = 100;     // PLACEHOLDER handling fee. Set to 0 to disable.
+export const INTL_SHIP = 2500;  // PLACEHOLDER flat international rate
+
+// Display-only. The backend recomputes this from the cart.
+export function quote(items, { country = "PK", method = "cod" } = {}) {
+  const base = totals(items);
+  const domestic = country === "PK";
+  const ship = base.sub === 0 ? 0 : domestic ? base.ship : INTL_SHIP;
+  const fee = method === "cod" && domestic && base.sub > 0 ? COD_FEE : 0;
+  return { ...base, ship, fee, total: base.sub + ship + fee };
+}
