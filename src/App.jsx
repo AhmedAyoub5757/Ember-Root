@@ -29,6 +29,7 @@ export default function App() {
         <Route path="/ingredients" element={<Placeholder title="Ingredients" />} />
         <Route path="/contact" element={<Placeholder title="Contact" />} />
         <Route path="/heat-guide" element={<Placeholder title="Heat guide" />} />
+        <Route path="/checkout" element={<Placeholder title="Checkout" />} />
       </Route>
     </Routes>
   );

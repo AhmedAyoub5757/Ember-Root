@@ -146,3 +146,5 @@ body::after {
 @media (prefers-reduced-motion: reduce) {
   .wave, .bubble { animation: none; }
 }
+
+html { scrollbar-gutter: stable; }
