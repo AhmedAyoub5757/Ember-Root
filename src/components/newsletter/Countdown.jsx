@@ -5,7 +5,7 @@ const pad = (n) => String(n).padStart(2, "0");
 
 function Cell({ label, value }) {
   return (
-    <div className="hair pt-3">
+    <div className="hair min-w-0 pt-3">
       <div className="relative h-[clamp(2.8rem,7vw,6rem)] overflow-hidden">
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.span
@@ -49,7 +49,7 @@ export default function Countdown({ target }) {
   return (
     <div role="timer" aria-label="Time until the crock opens">
       <p className="label mb-4 opacity-70">The crock opens in</p>
-      <div className="grid grid-cols-4 gap-x-4 lg:gap-x-6">
+      <div className="grid min-w-0 grid-cols-4 gap-x-4 lg:gap-x-6">
         {parts.map(([l, v]) => (
           <Cell key={l} label={l} value={v} />
         ))}

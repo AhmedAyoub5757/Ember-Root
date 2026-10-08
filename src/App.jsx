@@ -1,6 +1,8 @@
-import { Routes, Route, useParams } from "react-router-dom";
+import { Routes, Route, } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
+import Product from "./pages/Product";
+
 
 
 const Placeholder = ({ title }) => (
@@ -10,7 +12,7 @@ const Placeholder = ({ title }) => (
   </section>
 );
 
-const Flavor = () => <Placeholder title={`Flavor: ${useParams().id}`} />;
+// const Flavor = () => <Placeholder title={`Flavor: ${useParams().id}`} />;
 
 export default function App() {
   return (
@@ -20,7 +22,9 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Placeholder title="Shop" />} />
         <Route path="/shop/:type" element={<Placeholder title="Shop category" />} />
-        <Route path="/flavor/:id" element={<Flavor />} />
+        {/* <Route path="/flavor/:id" element={<Flavor />} /> */}
+        {/* <Route path="/flavor/:id" element={<Product />} /> */}
+        <Route path="/flavor/:id" element={<Product />} />
         <Route path="/story" element={<Placeholder title="Story" />} />
         <Route path="/ingredients" element={<Placeholder title="Ingredients" />} />
         <Route path="/contact" element={<Placeholder title="Contact" />} />

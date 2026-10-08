@@ -32,8 +32,8 @@ export default function Newsletter() {
   return (
     <section id="batch" className="bg-chili px-5 pb-24 pt-24 text-paper lg:px-8 lg:pb-32 lg:pt-32">
       <div className="mx-auto max-w-[1400px]">
-        <header className="grid grid-cols-12 gap-x-8 gap-y-8">
-          <div className="col-span-12 lg:col-span-8">
+        <header className="grid grid-cols-12 gap-x-0 gap-y-8 lg:gap-x-8">
+          <div className="col-span-12 min-w-0 lg:col-span-8">
             <p className="label opacity-70">06 / The next batch</p>
             <h2 className="display mt-5 text-[clamp(3.2rem,9vw,8.5rem)] font-semibold">
               {[`Batch ${BATCH.no} is`, "still asleep."].map((t, i) => (
@@ -52,7 +52,7 @@ export default function Newsletter() {
               ))}
             </h2>
           </div>
-          <div className="col-span-12 lg:col-span-4 lg:self-end">
+          <div className="col-span-12 min-w-0 lg:col-span-4 lg:self-end">
             <p className="max-w-[38ch] leading-relaxed opacity-90">
               Ninety days in the crock, and not one day less. Leave your email
               and we'll write to you the morning it opens, before the shop does.
@@ -60,15 +60,15 @@ export default function Newsletter() {
           </div>
         </header>
 
-        <div className="mt-14 grid grid-cols-12 gap-x-10 gap-y-14 lg:mt-24">
+        <div className="mt-14 grid grid-cols-12 gap-x-0 gap-y-14 lg:mt-24 lg:gap-x-10">
           {/* crock first on mobile, right column on desktop */}
-          <div className="order-first col-span-12 lg:order-last lg:col-span-5">
+          <div className="order-first col-span-12 min-w-0 lg:order-last lg:col-span-5">
             <div className="mx-auto max-w-[420px] lg:sticky lg:top-[128px] lg:max-w-none">
               <Crock progress={m.p} day={m.day} total={m.total} batchNo={BATCH.no} />
             </div>
           </div>
 
-          <div className="col-span-12 lg:col-span-7">
+          <div className="col-span-12 min-w-0 lg:col-span-7">
             <Countdown target={BATCH.opens} />
             <BatchForm />
           </div>

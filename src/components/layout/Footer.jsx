@@ -44,7 +44,7 @@ function Ruler() {
 }
 
 function FooterLink({ to, external, children }) {
-  const cls = "group inline-flex items-baseline gap-2 py-1 display-s text-xl lg:text-[1.35rem]";
+  const cls = "group inline-flex min-w-0 max-w-full items-baseline gap-2 break-words py-1 display-s text-xl lg:text-[1.35rem]";
   const inner = (
     <>
       <span className="transition-transform duration-300 group-hover:translate-x-1">{children}</span>
@@ -70,7 +70,7 @@ export default function Footer() {
           <span>Batch 07 / Bottling now</span>
         </p>
 
-        <div className="mt-14 grid grid-cols-12 gap-x-8 gap-y-14 lg:mt-20">
+        <div className="mt-14 grid grid-cols-12 gap-x-0 gap-y-14 lg:mt-20 lg:gap-x-8">
           <div className="col-span-12 lg:col-span-4">
             <p className="display-s text-4xl lg:text-5xl">
               Slow-grown <span className="italic">heat.</span>
@@ -86,9 +86,9 @@ export default function Footer() {
             </a>
           </div>
 
-          <nav aria-label="Footer" className="col-span-12 grid grid-cols-2 gap-x-8 gap-y-12 md:grid-cols-4 lg:col-span-8">
+          <nav aria-label="Footer" className="col-span-12 min-w-0 grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 md:grid-cols-4 lg:col-span-8">
             {cols.map(([title, items]) => (
-              <div key={title}>
+              <div key={title} className="min-w-0">
                 <p className="label opacity-60">{title}</p>
                 <ul className="mt-4">
                   {items.map(([label, to, external]) => (
