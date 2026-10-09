@@ -9,6 +9,7 @@ import { api } from "../lib/api";
 import { appearance, fonts, stripePromise } from "../lib/stripe";
 import { useCart } from "../store/cart";
 import { DEMO, useOrder } from "../store/order";
+import { useAuth } from "../store/auth";
 import Field from "../components/checkout/Field";
 import Payment from "../components/checkout/Payment";
 import Summary from "../components/checkout/Summary";
@@ -59,6 +60,7 @@ function CheckoutForm() {
   const items = useCart((s) => s.items);
   const clear = useCart((s) => s.clear);
   const place = useOrder((s) => s.place);
+  const user = useAuth((s) => s.user);
 
   const [v, setV] = useState(blank);
   const [method, setMethod] = useState("cod");
@@ -80,6 +82,12 @@ function CheckoutForm() {
   const q = useMemo(() => quote(items, { country: v.country, method }), [items, v.country, method]);
   const usd = toUsdCents(q.total);
   const pk = v.country === "PK";
+
+  useEffect(() => {
+    if (user) {
+      setV((s) => ({ ...s, name: s.name || user.name, email: s.email || user.email }));
+    }
+  }, [user]);
 
   // keep Stripe's idea of the amount in step with the cart
   useEffect(() => {

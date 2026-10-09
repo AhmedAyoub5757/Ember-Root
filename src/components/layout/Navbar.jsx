@@ -6,11 +6,14 @@ import { useCart } from "../../store/cart";
 import { inkFor, mixColors, parseColor } from "../../lib/color";
 import { heroBg, heroInk, useHeroTheme } from "../../store/heroTheme";
 import logo from "../../assets/images/logo.png";
+import AccountLink from "./AccountLink";
 import MegaMenu from "./MegaMenu";
 import MobileMenu from "./MobileMenu";
 
 const PAPER = "#F2EBDD";
 const SOIL = "#1F1A14";
+const BRAND_GRADIENT =
+  "linear-gradient(112deg, rgba(184, 50, 31, 0.28) 0%, rgba(217, 162, 27, 0.24) 28%, rgba(74, 90, 42, 0.24) 56%, rgba(181, 105, 74, 0.28) 78%, rgba(242, 235, 221, 0.62) 100%)";
 
 const links = [
   { no: "02", label: "Story", to: "/story" },
@@ -132,7 +135,11 @@ export default function Navbar() {
         <Ticker />
 
         <motion.div
-          style={{ backgroundColor: navBg, color: navInk }}
+          style={{
+            backgroundColor: navBg,
+            backgroundImage: BRAND_GRADIENT,
+            color: navInk,
+          }}
           className="hair-b"
         >
           <div className="mx-auto flex h-[72px] max-w-[1400px] items-stretch px-5 lg:px-8">
@@ -182,6 +189,7 @@ export default function Navbar() {
 
             {/* Right side */}
             <div className="ml-auto flex items-center gap-3">
+              <AccountLink />
               <button
                 onClick={() => useCart.getState().toggle()}
                 className="label flex h-10 items-center gap-3 border border-current pl-4 transition-colors hover:bg-[color:var(--hover-bg)]"
@@ -215,7 +223,14 @@ export default function Navbar() {
       </motion.header>
 
       {/* Outside the header on purpose: transformed parents break position:fixed */}
-      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} links={links} />
+      <MobileMenu
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        links={links}
+        navBg={navBg.get()}
+        navInk={navInk.get()}
+        lightInk={lightInk}
+      />
     </>
   );
 }

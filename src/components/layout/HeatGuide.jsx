@@ -51,8 +51,8 @@ function Brave() {
         How brave are you?
       </h2>
 
-      <div className="mt-10 grid grid-cols-12 items-end gap-x-10 gap-y-10">
-        <div className="col-span-12 lg:col-span-6">
+      <div className="mt-10 grid grid-cols-1 items-end gap-x-10 gap-y-10 lg:grid-cols-12">
+        <div className="col-span-1 lg:col-span-6">
           <p className="label opacity-60">Today I'm feeling</p>
           <p className="display mt-3 text-[clamp(3.5rem,9vw,7rem)] font-semibold">
             <Roll value={word} height="1.1em" />
@@ -85,7 +85,7 @@ function Brave() {
           <p className="mt-6 max-w-[42ch] leading-relaxed opacity-85">{meaning[level]}</p>
         </div>
 
-        <div className="col-span-12 lg:col-span-6">
+        <div className="col-span-1 lg:col-span-6">
           <motion.div
             animate={{ backgroundColor: pick.color, color: ink }}
             transition={{ duration: 0.6, ease: "easeOut" }}
@@ -134,8 +134,8 @@ export default function HeatGuide() {
   return (
     <div className="px-5 pb-28 pt-10 lg:px-8 lg:pb-36 lg:pt-14">
       <div className="mx-auto max-w-[1400px]">
-        <header className="grid grid-cols-12 gap-x-8 gap-y-8">
-          <div className="col-span-12 lg:col-span-8">
+        <header className="grid grid-cols-1 gap-x-8 gap-y-8 lg:grid-cols-12">
+          <div className="col-span-1 lg:col-span-8">
             <p className="label opacity-60">Learn / Heat guide</p>
             <h1 className="display mt-5 text-[clamp(3.2rem,9vw,8.5rem)] font-semibold">
               {["Heat,", "measured."].map((t, i) => (
@@ -152,7 +152,7 @@ export default function HeatGuide() {
               ))}
             </h1>
           </div>
-          <div className="col-span-12 lg:col-span-4 lg:self-end">
+          <div className="col-span-1 lg:col-span-4 lg:self-end">
             <p className="max-w-[40ch] leading-relaxed opacity-80">
               Pepper heat is counted in Scoville heat units, a scale devised
               by Wilbur Scoville in 1912. Today it's usually measured in a lab and
@@ -175,14 +175,14 @@ export default function HeatGuide() {
             {heatLevels.map(({ n, word }) => {
               const here = flavors.filter((f) => f.heat === n);
               return (
-                <li key={n} className="hair grid grid-cols-12 items-start gap-x-8 gap-y-4 py-7">
-                  <span className="label col-span-2 pt-2 lg:col-span-1">{String(n).padStart(2, "0")}</span>
-                  <div className="col-span-10 lg:col-span-3">
+                <li key={n} className="hair grid grid-cols-1 items-start gap-x-8 gap-y-4 py-7 lg:grid-cols-12">
+                  <span className="label col-span-1 pt-2 lg:col-span-1">{String(n).padStart(2, "0")}</span>
+                  <div className="col-span-1 lg:col-span-3">
                     <p className="display text-4xl font-semibold lg:text-5xl">{word}</p>
                     <div className="mt-3"><HeatRuler level={n} color="currentColor" /></div>
                   </div>
-                  <p className="col-span-12 max-w-[44ch] leading-relaxed opacity-85 lg:col-span-4">{meaning[n]}</p>
-                  <ul className="col-span-12 flex flex-wrap gap-2 lg:col-span-4 lg:justify-end">
+                  <p className="col-span-1 max-w-[44ch] leading-relaxed opacity-85 lg:col-span-4">{meaning[n]}</p>
+                  <ul className="col-span-1 flex flex-wrap gap-2 lg:col-span-4 lg:justify-end">
                     {here.length === 0 && <li className="label opacity-50">None in the range yet</li>}
                     {here.map((f) => (
                       <li key={f.id}>
@@ -211,9 +211,9 @@ export default function HeatGuide() {
             Putting out the fire.
           </h2>
 
-          <div className="mt-10 grid grid-cols-12 gap-x-10 gap-y-12">
+          <div className="mt-10 grid grid-cols-1 gap-x-10 gap-y-12 lg:grid-cols-12">
             {[["What helps", helps], ["What doesn't", hurts]].map(([title, items]) => (
-              <div key={title} className="col-span-12 lg:col-span-6">
+              <div key={title} className="col-span-1 lg:col-span-6">
                 <p className="label opacity-60">{title}</p>
                 <ul className="mt-4">
                   {items.map((t) => (

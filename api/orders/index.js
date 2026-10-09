@@ -1,7 +1,9 @@
 import { randomBytes } from "node:crypto";
 import { sql } from "../_lib/db.js";
+import { getUser } from "../_lib/auth.js";
 import { getStripe } from "../_lib/stripe.js";
 import { toOrder } from "../_lib/orders.js";
+import { sendAdminEmail, sendOrderConfirmationEmail } from "../_lib/resend.js";
 import { countries } from "../../src/data/checkout.js";
 import { quote, resolveItem, toUsdCents } from "../../src/lib/money.js";
 import { validate } from "../../src/lib/validate.js";
@@ -97,6 +99,7 @@ export default async function handler(req, res) {
       });
     }
 
+    const user = await getUser(req).catch(() => null);
     const q = quote(normalizedItems, { country: v.country, method });
     const isCard = method === "card";
     const chargeAmount = isCard ? toUsdCents(q.total) : null;
@@ -110,18 +113,27 @@ export default async function handler(req, res) {
     const [row] = await sql`
       INSERT INTO orders (
         token, status, method, currency, sub, ship, fee, total,
-        contact, ship_to, note, items, charge_currency, charge_amount
+        contact, ship_to, note, items, charge_currency, charge_amount, user_id
       )
       VALUES (
         ${token}, ${isCard ? "pending" : "cod"}, ${method}, 'PKR',
         ${q.sub}, ${q.ship}, ${q.fee}, ${q.total},
         ${JSON.stringify(contact)}::jsonb, ${JSON.stringify(shipTo)}::jsonb,
         ${note}, ${JSON.stringify(lines)}::jsonb,
-        ${chargeCurrency}, ${chargeAmount}
+        ${chargeCurrency}, ${chargeAmount}, ${user?.id ?? null}
       )
       RETURNING *`;
 
-    if (!isCard) return res.status(201).json({ order: toOrder(row), token });
+    if (!isCard) {
+      sendOrderConfirmationEmail(toOrder(row)).catch((e) =>
+        console.error("Failed to send COD order confirmation email:", e)
+      );
+      sendAdminEmail(
+        `New order #${row.no}`,
+        `Customer: ${v.name} <${v.email}>\nTotal: ${q.total} PKR\nPayment: ${method}\nStatus: ${row.status}`,
+      ).catch((e) => console.error("Failed to send admin order notification:", e));
+      return res.status(201).json({ order: toOrder(row), token });
+    }
 
     // Card: create the PaymentIntent for exactly the amount we just saved
     try {
@@ -136,7 +148,11 @@ export default async function handler(req, res) {
       );
       const [updated] = await sql`
         UPDATE orders SET provider_ref = ${pi.id} WHERE id = ${row.id} RETURNING *`;
-      return res.status(201).json({ order: toOrder(updated), token, clientSecret: pi.client_secret });
+        sendAdminEmail(
+          `New order #${updated.no}`,
+          `Customer: ${v.name} <${v.email}>\nTotal: ${q.total} PKR\nPayment: ${method}\nStatus: ${updated.status}`,
+        ).catch((e) => console.error("Failed to send admin order notification:", e));
+        return res.status(201).json({ order: toOrder(updated), token, clientSecret: pi.client_secret });
     } catch (err) {
       console.error("Stripe PaymentIntent failed:", err);
       await sql`UPDATE orders SET status = 'failed' WHERE id = ${row.id}`;

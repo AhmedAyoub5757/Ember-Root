@@ -61,7 +61,7 @@ export default function Doc({ doc }) {
 
   return (
     <div className="px-5 pb-28 pt-10 lg:px-8 lg:pb-36 lg:pt-14">
-      <div className="mx-auto max-w-[1400px]">
+      <div className="mx-auto min-w-0 max-w-[1400px]">
         <header className="grid grid-cols-12 gap-x-8 gap-y-8">
           <div className="col-span-12 lg:col-span-8">
             <p className="label opacity-60">{doc.kicker}</p>
@@ -92,12 +92,12 @@ export default function Doc({ doc }) {
           </p>
         )}
 
-        <div className="mt-14 grid grid-cols-12 gap-x-10 gap-y-10 lg:mt-20">
+        <div className="mt-14 min-w-0 grid grid-cols-1 gap-x-10 gap-y-10 lg:mt-20 lg:grid-cols-12">
           {/* contents */}
-          <nav aria-label="Contents" className="col-span-12 lg:col-span-3">
-            <div className="lg:sticky lg:top-[128px]">
+          <nav aria-label="Contents" className="col-span-1 min-w-0 lg:col-span-3">
+            <div className="min-w-0 max-w-full overflow-hidden lg:sticky lg:top-[128px]">
               <p className="label opacity-60">Contents</p>
-              <ol className="no-scrollbar mt-4 flex gap-x-6 overflow-x-auto lg:block lg:overflow-visible">
+              <ol className="no-scrollbar mt-4 flex min-w-0 max-w-full gap-x-6 overflow-x-auto lg:block lg:overflow-visible">
                 {doc.sections.map((s, i) => (
                   <li key={s.id} className={`shrink-0 ${rule}`}>
                     <a
@@ -117,7 +117,7 @@ export default function Doc({ doc }) {
           </nav>
 
           {/* clauses */}
-          <div className="col-span-12 lg:col-span-9">
+          <div className="col-span-1 min-w-0 lg:col-span-9">
             {doc.sections.map((s, i) => (
               <section key={s.id} id={s.id} className="hair scroll-mt-40 pb-12 pt-6">
                 <h2 className="flex items-baseline gap-4">

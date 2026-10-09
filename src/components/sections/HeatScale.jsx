@@ -40,8 +40,9 @@ export default function HeatScale({ activeId, setActive }) {
         <span className="hidden sm:inline">Scoville heat units</span>
       </figcaption>
 
-      <div className="relative mx-4 mt-6 h-[190px]">
-        <div className="absolute inset-x-0 bottom-[64px]">
+      <div className="no-scrollbar -mx-1 mt-6 overflow-x-auto pb-5">
+        <div className="relative mx-4 h-[190px] min-w-[560px]">
+          <div className="absolute inset-x-0 bottom-[64px]">
           {/* axis */}
           <motion.div
             className="h-px origin-left bg-current"
@@ -79,7 +80,7 @@ export default function HeatScale({ activeId, setActive }) {
               <span className="label absolute left-0 top-[46px] -translate-x-1/2 whitespace-nowrap opacity-60">
                 {l}
               </span>
-            </div>
+              </div>
           ))}
 
           {/* flavor pins */}
@@ -119,6 +120,7 @@ export default function HeatScale({ activeId, setActive }) {
               </motion.button>
             );
           })}
+        </div>
         </div>
       </div>
 

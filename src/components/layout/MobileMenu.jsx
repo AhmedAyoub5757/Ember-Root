@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { flavors } from "../../data/products";
+import { useAuth } from "../../store/auth";
 import logo from "../../assets/images/logo.png";
 
-export default function MobileMenu({ open, onClose, links }) {
+export default function MobileMenu({ open, onClose, links, navBg, navInk, lightInk }) {
   const [shop, setShop] = useState(false);
+  const user = useAuth((s) => s.user);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -20,11 +22,16 @@ export default function MobileMenu({ open, onClose, links }) {
           animate={{ clipPath: "inset(0 0 0% 0)" }}
           exit={{ clipPath: "inset(0 0 100% 0)" }}
           transition={{ duration: 0.6, ease: [0.7, 0, 0.2, 1] }}
-          className="fixed inset-0 z-[60] flex flex-col overflow-y-auto bg-paper text-soil lg:hidden"
+          style={{ backgroundColor: navBg, color: navInk }}
+          className="fixed inset-0 z-[60] flex flex-col overflow-y-auto lg:hidden"
         >
           <div className="hair-b flex h-[72px] shrink-0 items-center justify-between px-5">
-            <img src={logo} alt="Ember & Root" className="h-9 w-auto mix-blend-multiply" />
-            <button onClick={onClose} className="label border border-soil px-4 py-2">
+            <img
+              src={logo}
+              alt="Ember & Root"
+              className={`h-9 w-auto transition-[filter] duration-300 ${lightInk ? "brightness-0 invert" : "mix-blend-multiply"}`}
+            />
+            <button onClick={onClose} className="label border border-current px-4 py-2">
               Close ×
             </button>
           </div>
@@ -66,6 +73,16 @@ export default function MobileMenu({ open, onClose, links }) {
                         View all sauces →
                       </Link>
                     </li>
+                    <li>
+                      <Link to="/shop/trio" onClick={onClose} className="hair flex items-center justify-between py-4">
+                        <span>The Trio Box</span><span aria-hidden>→</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/shop/gifts" onClick={onClose} className="hair flex items-center justify-between py-4">
+                        <span>Gift sets</span><span aria-hidden>→</span>
+                      </Link>
+                    </li>
                   </motion.ul>
                 )}
               </AnimatePresence>
@@ -79,6 +96,12 @@ export default function MobileMenu({ open, onClose, links }) {
                 </Link>
               </li>
             ))}
+            <li className="hair">
+              <Link to={user ? "/account" : "/auth"} onClick={onClose} className="flex items-baseline gap-4 py-4">
+                <span className="label opacity-50">05</span>
+                <span className="display text-5xl">{user ? "Account" : "Sign in"}</span>
+              </Link>
+            </li>
             <li className="hair" />
           </ul>
 

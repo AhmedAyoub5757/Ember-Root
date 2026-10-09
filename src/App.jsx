@@ -13,15 +13,39 @@ import Story from "./components/story/Story";
 import Ingredients from "./components/ingredients/Ingredients";
 import HeatGuide from "./components/layout/HeatGuide";
 import Track from "./pages/Track";
+import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import { docs } from "./pages/pages";
+import { useEffect } from "react";
+import Auth from "./pages/Auth";
+import Account from "./pages/Account";
+import Dashboard from "./pages/Dashboard";
+import { useAuth } from "./store/auth";
 
 // const Flavor = () => <Placeholder title={`Flavor: ${useParams().id}`} />;
 
+function RequireAuth() {
+  const user = useAuth((s) => s.user);
+  const status = useAuth((s) => s.status);
+
+  if (status === "loading") return null;
+  return user ? <Layout /> : <Navigate to="/auth" replace />;
+}
+
 export default function App() {
+  useEffect(() => {
+    useAuth.getState().load();
+  }, []);
+
   return (
     <Routes>
-      <Route element={<Layout />}>
+      <Route path="/auth" element={<Auth />} />
+      <Route path="/login" element={<Navigate to="/auth" replace />} />
+      <Route
+        path="/signup"
+        element={<Navigate to="/auth?mode=signup" replace />}
+      />
+      <Route element={<RequireAuth />}>
         {/* <Route path="/" element={<div className="h-[200vh] px-8 py-24"><Placeholder title="Hero goes here" /></div>} /> */}
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
@@ -59,11 +83,12 @@ export default function App() {
         />
         <Route path="/terms" element={<Doc key="terms" doc={docs.terms} />} />
         <Route path="/track" element={<Track />} />
-        // replace the temporary checkout placeholder, and add the confirmation
-        route:
+        <Route path="/contact" element={<Contact />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order/:no" element={<Confirmation />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Route>
     </Routes>
   );

@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { flavors } from "../../data/products";
 import { BATCH } from "../../data/batch";
+import { api } from "../../lib/api";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -30,13 +31,20 @@ export default function BatchForm() {
 
     setState("sending");
     try {
-      // TODO (backend step): POST { email: value, flavors: picks, batch: BATCH.no } to /api/subscribe
-      await new Promise((r) => setTimeout(r, 900));
+      await api("/subscribe", {
+        method: "POST",
+        body: {
+          email: value,
+          flavors: picks,
+          batch: BATCH.no,
+          company: honey.current?.value,
+        },
+      });
       setEmail(value);
       setState("done");
-    } catch {
+    } catch (err) {
       setState("idle");
-      setError("Something went wrong on our side. Please try again.");
+      setError(err.message || "Something went wrong on our side. Please try again.");
     }
   };
 

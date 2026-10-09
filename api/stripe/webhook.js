@@ -2,6 +2,8 @@
 import "../_lib/env.js";
 import { sql } from "../_lib/db.js";
 import { getStripe } from "../_lib/stripe.js";
+import { toOrder } from "../_lib/orders.js";
+import { sendAdminEmail, sendOrderConfirmationEmail } from "../_lib/resend.js";
 
 export async function POST(request) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -33,12 +35,21 @@ export async function POST(request) {
         WHERE provider_ref = ${pi.id}
           AND status = 'pending'
           AND charge_amount = ${pi.amount_received}
-        RETURNING no`;
-      console.log(
-        rows.length
-          ? `Order ${rows[0].no} marked paid`
-          : `PaymentIntent ${pi.id}: nothing to update (already paid, unknown, or amount mismatch)`
-      );
+        RETURNING *`;
+      if (rows.length) {
+        console.log(`Order ${rows[0].no} marked paid`);
+        sendOrderConfirmationEmail(toOrder(rows[0])).catch((e) =>
+          console.error("Failed to send paid order confirmation email:", e)
+        );
+        sendAdminEmail(
+          `Payment received for order #${rows[0].no}`,
+          `Order #${rows[0].no} is now paid.\nAmount: ${rows[0].charge_amount} ${rows[0].charge_currency}`,
+        ).catch((e) => console.error("Failed to send admin payment notification:", e));
+      } else {
+        console.log(
+          `PaymentIntent ${pi.id}: nothing to update (already paid, unknown, or amount mismatch)`
+        );
+      }
     } else if (event.type === "payment_intent.payment_failed") {
       console.log(`Payment attempt failed for ${event.data.object.id}. The customer may retry.`);
     }
