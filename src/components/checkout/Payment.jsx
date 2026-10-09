@@ -1,11 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { PaymentElement } from "@stripe/react-stripe-js";
 import { methods } from "../../data/checkout";
-import { COD_FEE, fmt } from "../../lib/money";
+import { COD_FEE, PKR_PER_USD, fmt, fmtUsd } from "../../lib/money";
 import Field from "./Field";
 
 const ease = [0.2, 0.7, 0.2, 1];
+const isTest = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY?.startsWith("pk_test");
 
-export default function Payment({ method, setMethod, country, bind }) {
+export default function Payment({ method, setMethod, country, bind, usd, stripeOn }) {
   const list = methods.filter((m) => !m.pkOnly || country === "PK");
 
   const onKey = (e) => {
@@ -21,12 +23,31 @@ export default function Payment({ method, setMethod, country, bind }) {
 
   const panel = {
     card: (
-      <div className="border border-dashed border-soil/50 p-5">
-        <p className="label opacity-70">Secure card form</p>
-        <p className="mt-2 max-w-[46ch] text-sm leading-relaxed">
-          Card details are typed into Stripe's own secure fields, never into ours.
-          They appear here once payments are connected.
+      <div>
+        {stripeOn ? (
+          <PaymentElement
+            options={{
+              layout: "tabs",
+              // We already collected these in the form, and pass them when confirming.
+              fields: { billingDetails: { name: "never", email: "never", phone: "never" } },
+            }}
+            onLoadError={(event) => {
+              console.error("Stripe PaymentElement failed to load:", event.error);
+            }}
+          />
+        ) : (
+          <p className="label border border-dashed border-soil/50 p-4 text-chili">
+            Card form unavailable. Add VITE_STRIPE_PUBLISHABLE_KEY to .env.local and restart.
+          </p>
+        )}
+        <p className="label mt-5 opacity-70">
+          Charged in USD · about {fmtUsd(usd)} at Rs {PKR_PER_USD} / $1 (test rate)
         </p>
+        {isTest && (
+          <p className="label mt-1 opacity-60">
+            Test mode · card 4242 4242 4242 4242, any future date, any CVC
+          </p>
+        )}
       </div>
     ),
     paypal: (

@@ -1,11 +1,14 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Elements, useElements, useStripe } from "@stripe/react-stripe-js";
 import { flavors } from "../data/products";
 import { sizes } from "../data/productExtra";
-import { countries, etaFor, provinces } from "../data/checkout";
-import { fmt, quote, unitPrice } from "../lib/money";
+import { countries, provinces } from "../data/checkout";
+import { fmt, quote, toUsdCents, unitPrice } from "../lib/money";
 import { validate } from "../lib/validate";
+import { api } from "../lib/api";
+import { appearance, fonts, stripePromise } from "../lib/stripe";
 import { useCart } from "../store/cart";
 import { DEMO, useOrder } from "../store/order";
 import Field from "../components/checkout/Field";
@@ -31,8 +34,30 @@ function Section({ no, title, children }) {
   );
 }
 
+/* The provider must wrap the form so the card fields can live inside it. */
 export default function Checkout() {
+  const items = useCart((s) => s.items);
+
+  // Options are set once. The amount is kept current with elements.update() below.
+  const [options] = useState(() => ({
+    mode: "payment",
+    amount: Math.max(50, toUsdCents(quote(items, { country: "PK", method: "card" }).total)),
+    currency: "usd",
+    appearance,
+    fonts,
+  }));
+
+  return (
+    <Elements stripe={stripePromise} options={options}>
+      <CheckoutForm />
+    </Elements>
+  );
+}
+
+function CheckoutForm() {
   const navigate = useNavigate();
+  const stripe = useStripe();
+  const elements = useElements();
   const items = useCart((s) => s.items);
   const clear = useCart((s) => s.clear);
   const place = useOrder((s) => s.place);
@@ -42,6 +67,7 @@ export default function Checkout() {
   const [errors, setErrors] = useState({});
   const [sending, setSending] = useState(false);
   const done = useRef(false);
+  const attempt = useRef(null); // the order + clientSecret of the last submit, reused on retry
 
   const lines = useMemo(
     () =>
@@ -55,7 +81,13 @@ export default function Checkout() {
     [items]
   );
   const q = useMemo(() => quote(items, { country: v.country, method }), [items, v.country, method]);
+  const usd = toUsdCents(q.total);
   const pk = v.country === "PK";
+
+  // keep Stripe's idea of the amount in step with the cart
+  useEffect(() => {
+    if (elements && usd >= 50) elements.update({ amount: usd });
+  }, [elements, usd]);
 
   /* ---------- field plumbing ---------- */
   const set = (k) => (e) => {
@@ -64,7 +96,7 @@ export default function Checkout() {
     if (errors[k]) setErrors((s) => ({ ...s, [k]: undefined }));
   };
   const blur = (k) => () => {
-    if (!v[k] && !errors[k]) return; // don't nag people who are just tabbing through
+    if (!v[k] && !errors[k]) return;
     setErrors((s) => ({ ...s, [k]: validate(v, method)[k] }));
   };
   const bind = (k) => ({ name: k, value: v[k], onChange: set(k), onBlur: blur(k), error: errors[k] });
@@ -91,34 +123,69 @@ export default function Checkout() {
 
     setSending(true);
     try {
-      // TODO (backend step): POST the cart + details to /api/orders.
-      // The server recalculates prices, creates the order, and starts the chosen payment.
-      await new Promise((r) => setTimeout(r, 1100));
+      // Card: validate the card fields first, before any network call
+      if (method === "card") {
+        if (!stripe || !elements) throw new Error("The card form is still loading. Try again in a moment.");
+        const { error: submitError } = await elements.submit();
+        if (submitError) {
+          setSending(false);
+          setErrors({ form: submitError.message });
+          return;
+        }
+      }
 
-      const no = String(4000 + Math.floor(Math.random() * 5000)); // placeholder, server assigns later
-      place({
-        no,
-        placedAt: new Date().toISOString(),
-        method,
-        note: v.note.trim(),
-        eta: etaFor(v.country),
-        contact: { name: v.name.trim(), email: v.email.trim(), phone: v.phone.trim() },
-        ship: {
-          address: v.address.trim(), city: v.city.trim(), province: v.province.trim(),
-          postal: v.postal.trim(), country: v.country,
-        },
-        items: lines.map(({ item, f, size, unit }) => ({
-          id: f.id, name: f.name, ml: size.ml, qty: item.qty, unit,
-        })),
-        money: { sub: q.sub, ship: q.ship, fee: q.fee, total: q.total },
-      });
+      // Reuse the same order if nothing changed (e.g. retrying after a declined card)
+      const sig = JSON.stringify([method, v, items.map(({ id, size, qty }) => [id, size, qty])]);
+      let att = attempt.current;
+      if (!att || att.sig !== sig) {
+        const data = await api("/orders", {
+          method: "POST",
+          body: {
+            ...v,
+            method,
+            items: items.map(({ id, size, qty }) => ({ id, size, qty })), // IDs only, never prices
+          },
+        });
+        att = attempt.current = { sig, ...data };
+      }
 
+      if (method === "card") {
+        const { error, paymentIntent } = await stripe.confirmPayment({
+          elements,
+          clientSecret: att.clientSecret,
+          redirect: "if_required",
+          confirmParams: {
+            return_url: `${window.location.origin}/order/${att.order.no}?t=${att.token}`,
+            payment_method_data: {
+              billing_details: { name: v.name.trim(), email: v.email.trim(), phone: v.phone.trim() },
+            },
+          },
+        });
+        if (error) {
+          setSending(false);
+          setErrors({ form: error.message }); // the order is kept for the retry
+          return;
+        }
+        if (!["succeeded", "processing"].includes(paymentIntent?.status)) {
+          setSending(false);
+          setErrors({ form: "The payment wasn't completed. Please try again." });
+          return;
+        }
+      }
+
+      place(att.order);
       done.current = true;
-      navigate(`/order/${no}`, { replace: true });
+      navigate(`/order/${att.order.no}?t=${att.token}`, { replace: true });
       clear();
-    } catch {
+    } catch (err) {
       setSending(false);
-      setErrors({ form: "Something went wrong on our side. Nothing was charged. Please try again." });
+      if (err.fields && Object.keys(err.fields).length) {
+        setErrors(err.fields);
+        const f = FIELD_ORDER.find((k) => err.fields[k]);
+        if (f) document.getElementById(`f-${f}`)?.focus();
+      } else {
+        setErrors({ form: err.message || "Something went wrong on our side. Nothing was charged." });
+      }
     }
   };
 
@@ -134,14 +201,14 @@ export default function Checkout() {
           <p className="mt-6 max-w-[38ch] leading-relaxed opacity-80">
             Your order slip is empty. Pick a bottle first and we'll hold the table.
           </p>
-          <Link to="/shop" className="label mt-8 inline-flex items-center gap-3 border border-soil bg-soil px-6 py-4 text-paper transition-colors hover:bg-chili hover:border-chili">
+          <Link to="/shop" className="label mt-8 inline-flex items-center gap-3 border border-soil bg-soil px-6 py-4 text-paper transition-colors hover:border-chili hover:bg-chili">
             Browse the sauces <span aria-hidden>→</span>
           </Link>
         </div>
       </div>
     );
   }
-  if (lines.length === 0) return null; // the order was placed; we're navigating away
+  if (lines.length === 0) return null;
 
   const cta =
     method === "cod" ? "Place order"
@@ -152,7 +219,6 @@ export default function Checkout() {
   return (
     <div className="px-5 pb-24 pt-10 lg:px-8 lg:pt-14">
       <div className="mx-auto max-w-[1400px]">
-        {/* header */}
         <div>
           <p className="label flex flex-wrap gap-x-3 opacity-70">
             <button type="button" onClick={() => useCart.getState().open()} className="hover:underline">Cart</button>
@@ -177,17 +243,16 @@ export default function Checkout() {
           </h1>
         </div>
 
-        <div className="mt-10 grid grid-cols-12 gap-x-0 gap-y-8 lg:mt-14 lg:gap-x-12">
-          {/* summary first on mobile, right on desktop */}
-          <aside className="order-1 col-span-12 min-w-0 lg:order-2 lg:col-span-5">
+        <div className="mt-10 grid grid-cols-12 gap-x-12 gap-y-8 lg:mt-14">
+          <aside className="order-1 col-span-12 lg:order-2 lg:col-span-5">
             <div className="lg:sticky lg:top-[128px]">
               <Summary lines={lines} q={q} country={v.country} />
             </div>
           </aside>
 
-          <form onSubmit={submit} noValidate className="order-2 col-span-12 min-w-0 lg:order-1 lg:col-span-7">
+          <form onSubmit={submit} noValidate className="order-2 col-span-12 lg:order-1 lg:col-span-7">
             <Section no="01" title="Contact">
-              <div className="grid min-w-0 gap-x-0 gap-y-7 sm:grid-cols-2 sm:gap-x-8">
+              <div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
                 <Field label="Full name" autoComplete="name" className="sm:col-span-2" {...bind("name")} />
                 <Field label="Email" type="email" inputMode="email" autoComplete="email" placeholder="you@yourtable.com" {...bind("email")} />
                 <Field
@@ -237,7 +302,14 @@ export default function Checkout() {
             </Section>
 
             <Section no="03" title="Payment">
-              <Payment method={method} setMethod={setMethod} country={v.country} bind={bind} />
+              <Payment
+                method={method}
+                setMethod={setMethod}
+                country={v.country}
+                bind={bind}
+                usd={usd}
+                stripeOn={!!stripePromise}
+              />
             </Section>
 
             {errors.form && (
@@ -257,7 +329,7 @@ export default function Checkout() {
             </button>
 
             {DEMO && (
-              <p className="label mt-4 opacity-70">Demo mode · no payment is taken and nothing is sent yet</p>
+              <p className="label mt-4 opacity-70">Test mode · no real money moves. Orders go to your test database.</p>
             )}
             <p className="label mt-3 opacity-60">
               By placing your order you agree to our{" "}

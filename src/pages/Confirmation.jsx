@@ -1,10 +1,12 @@
-import { useEffect } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { countryName, methodName } from "../data/checkout";
-import { fmt } from "../lib/money";
+import { fmt, fmtUsd } from "../lib/money";
 import { zigzag } from "../lib/zigzag";
 import { DEMO, useOrder } from "../store/order";
+import { api } from "../lib/api";
+
 
 const ease = [0.2, 0.7, 0.2, 1];
 const stages = ["Received", "Packed", "Dispatched", "Delivered"];
@@ -16,7 +18,10 @@ const when = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: 
 
 const nextStep = {
   cod: (o) => `Keep ${fmt(o.money.total)} in cash ready for the rider.`,
-  card: () => "Your card payment is confirmed by Stripe before we pack.",
+  card: (o) =>
+    o.status === "paid"
+      ? "Payment received. We'll start packing."
+      : "We're waiting for Stripe to confirm your payment. This page updates by itself.",
   paypal: () => "Your PayPal payment is confirmed before we pack.",
   easypaisa: () => "Approve the payment in your Easypaisa app if you haven't already.",
 };
@@ -27,11 +32,44 @@ function Rule() {
 
 export default function Confirmation() {
   const { no } = useParams();
-  const o = useOrder((s) => s.last);
+  const [params] = useSearchParams();
+  const token = params.get("t");
+  const cached = useOrder((s) => s.last);
+  const hasCache = cached?.no === no;
+  const [fresh, setFresh] = useState(null);
+  const [failed, setFailed] = useState(false);
+  const [gaveUp, setGaveUp] = useState(false);
+  const o = fresh ?? (hasCache ? cached : null);
 
   useEffect(() => { document.title = `Order ${no}: Ember & Root`; }, [no]);
 
-  if (!o || o.no !== no) return <Navigate to="/" replace />;
+  // Load from the server, and keep checking while a card payment is being confirmed
+  useEffect(() => {
+    if (!token) return;
+    let stop = false;
+    let timer;
+    let tries = 0;
+    const load = async () => {
+      try {
+        const r = await api(`/orders/${no}?t=${encodeURIComponent(token)}`);
+        if (stop) return;
+        setFresh(r);
+        if (r.status === "pending") {
+          if (++tries < 20) timer = setTimeout(load, 2000);
+          else setGaveUp(true);
+        }
+      } catch {
+        if (!stop) setFailed(true);
+      }
+    };
+    load();
+    return () => { stop = true; clearTimeout(timer); };
+  }, [no, token]);
+
+  if (!o) {
+    if (!token || failed) return <Navigate to="/" replace />;
+    return <p className="label px-5 py-24 lg:px-8">Finding your slip…</p>;
+  }
 
   const first = o.contact.name.split(" ")[0];
   const s = o.ship;
@@ -63,9 +101,16 @@ export default function Confirmation() {
           </p>
 
           {DEMO && (
-            <p role="status" className="label mt-6 inline-block border border-chili px-3 py-2 text-chili">
-              Demo order · no payment was taken and nothing was sent
-            </p>
+            <>
+              <p role="status" className="label mt-6 inline-block border border-chili px-3 py-2 text-chili">
+                Test mode · no real money moved
+              </p>
+              {o.status === "pending" && (
+                <p role="status" className="label mt-6 inline-block border border-current px-3 py-2">
+                  {gaveUp ? "Still confirming. Refresh in a minute." : "Confirming your payment…"}
+                </p>
+              )}
+            </>
           )}
 
           <p className="mt-6 max-w-[44ch] leading-relaxed opacity-85">{nextStep[o.method](o)}</p>
@@ -154,8 +199,8 @@ export default function Confirmation() {
               <div className="flex justify-between gap-4">
                 <span className="opacity-60">Payment</span>
                 <span className="text-right">
-                  {methodName[o.method]}
-                  {DEMO && <span className="block opacity-60">Demo · not charged</span>}
+                  {methodName[o.method]} · {o.status === "paid" ? "Paid" : o.status === "pending" ? "Awaiting" : "On delivery"}
+                  {o.charge && <span className="block opacity-60">Charged {fmtUsd(o.charge.amount)} USD (test)</span>}
                 </span>
               </div>
 
@@ -169,7 +214,7 @@ export default function Confirmation() {
               transition={{ type: "spring", stiffness: 520, damping: 17, delay: 0.9 }}
               className="label pointer-events-none absolute right-2 top-20 border-2 border-chili px-2 py-1 text-xs text-chili mix-blend-multiply sm:right-3 sm:top-24 sm:border-[3px] sm:px-4 sm:py-2 sm:text-lg"
             >
-              Received
+              {o.status === "paid" ? "Paid" : o.status === "pending" ? "Pending" : "Received"}
             </motion.span>
           </motion.article>
         </div>

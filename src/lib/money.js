@@ -1,5 +1,5 @@
-import { sizes } from "../data/productExtra";
-import { flavors } from "../data/products";
+import { sizes } from "../data/productExtra.js";
+import { flavors } from "../data/products.js";
 
 export const fmt = (n) => `Rs ${n.toLocaleString("en-US")}`;
 
@@ -35,3 +35,8 @@ export function quote(items, { country = "PK", method = "cod" } = {}) {
   const fee = method === "cod" && domestic && base.sub > 0 ? COD_FEE : 0;
   return { ...base, ship, fee, total: base.sub + ship + fee };
 }
+
+export const PKR_PER_USD = 280; // PLACEHOLDER test rate
+
+export const toUsdCents = (pkr) => Math.round((pkr / PKR_PER_USD) * 100);
+export const fmtUsd = (cents) => `$${(cents / 100).toFixed(2)}`;

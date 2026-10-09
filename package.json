@@ -10,12 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
+    "@stripe/react-stripe-js": "^7.0.0",
+    "@stripe/stripe-js": "^10.0.0",
     "@tailwindcss/vite": "^4.3.3",
     "framer-motion": "^14.0.0",
     "lucide-react": "^1.52.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4",
+    "stripe": "^23.0.0",
     "tailwindcss": "^4.3.3",
     "zustand": "^5.0.15"
   },
