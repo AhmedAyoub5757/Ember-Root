@@ -18,8 +18,8 @@ export const provinces = [
 // pkOnly methods are hidden for other countries
 export const methods = [
   { id: "card",      name: "Card",             via: "Visa, Mastercard · Stripe", pkOnly: false },
-  { id: "paypal",    name: "PayPal",           via: "Pay with your PayPal balance or card", pkOnly: false },
-  { id: "easypaisa", name: "Easypaisa",        via: "Mobile account", pkOnly: true },
+  { id: "paypal",    name: "PayPal",           via: "Pay with your PayPal balance or card", pkOnly: false, demo: true },
+  { id: "easypaisa", name: "Easypaisa",        via: "Mobile account", pkOnly: true, demo: true },
   { id: "cod",       name: "Cash on delivery", via: "Pay the rider in cash", pkOnly: true },
 ];
 export const methodName = Object.fromEntries(methods.map((m) => [m.id, m.name]));

@@ -206,7 +206,7 @@ export default function CartDrawer() {
                     Keep browsing
                   </button>
                   <p className="label mt-3 opacity-60 lg:mt-4">
-                    Cash on delivery · Card · PayPal · Easypaisa
+                    Cash on delivery · Card
                   </p>
                 </footer>
               </>

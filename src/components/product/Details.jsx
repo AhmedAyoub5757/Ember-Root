@@ -6,8 +6,7 @@ const ease = [0.2, 0.7, 0.2, 1];
 
 const shipping = [
   ["Cash on delivery", "Across Pakistan"],
-  ["Card & PayPal", "International orders"],
-  ["Easypaisa", "Pakistan"],
+  ["Card", "International orders"],
   ["Free shipping", "Orders over Rs 5,000"],
 ];
 

@@ -2,12 +2,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { PaymentElement } from "@stripe/react-stripe-js";
 import { methods } from "../../data/checkout";
 import { COD_FEE, PKR_PER_USD, fmt, fmtUsd } from "../../lib/money";
-import Field from "./Field";
 
 const ease = [0.2, 0.7, 0.2, 1];
 const isTest = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY?.startsWith("pk_test");
 
-export default function Payment({ method, setMethod, country, bind, usd, stripeOn }) {
+export default function Payment({ method, setMethod, country, usd, stripeOn }) {
   const list = methods.filter((m) => !m.pkOnly || country === "PK");
 
   const onKey = (e) => {
@@ -51,20 +50,14 @@ export default function Payment({ method, setMethod, country, bind, usd, stripeO
       </div>
     ),
     paypal: (
-      <p className="max-w-[46ch] text-sm leading-relaxed">
-        You'll be sent to PayPal to approve the payment, then brought straight back here.
+      <p className="label border border-dashed border-soil/50 p-4">
+        PayPal is shown for design only in this build. Choose Card or Cash on delivery to place a test order.
       </p>
     ),
     easypaisa: (
-      <Field
-        label="Easypaisa mobile number"
-        type="tel"
-        inputMode="tel"
-        autoComplete="tel"
-        placeholder="0300 1234567"
-        hint="The number linked to your Easypaisa account. You'll approve the payment in the app."
-        {...bind("wallet")}
-      />
+      <p className="label border border-dashed border-soil/50 p-4">
+        Easypaisa is shown for design only in this build. Choose Card or Cash on delivery to place a test order.
+      </p>
     ),
     cod: (
       <p className="max-w-[46ch] text-sm leading-relaxed">
@@ -104,7 +97,7 @@ export default function Payment({ method, setMethod, country, bind, usd, stripeO
                 <span className="label mt-0.5 block opacity-70">{m.via}</span>
               </span>
               <span className="label relative whitespace-nowrap text-right opacity-70">
-                {m.id === "cod" && COD_FEE > 0 ? `+ ${fmt(COD_FEE)}` : "No fee"}
+                {m.demo ? "Demo" : m.id === "cod" && COD_FEE > 0 ? `+ ${fmt(COD_FEE)}` : "No fee"}
               </span>
             </button>
           );

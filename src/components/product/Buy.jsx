@@ -92,7 +92,7 @@ export default function Buy({ f, ink, size, setSize, qty, setQty, added, onAdd, 
       </div>
 
       <p className="label mt-4 opacity-70">
-        Cash on delivery across Pakistan · Card, PayPal &amp; Easypaisa at checkout
+        Cash on delivery across Pakistan · Card at checkout
       </p>
     </div>
   );

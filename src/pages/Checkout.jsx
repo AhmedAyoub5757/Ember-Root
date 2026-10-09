@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Elements, useElements, useStripe } from "@stripe/react-stripe-js";
 import { flavors } from "../data/products";
 import { sizes } from "../data/productExtra";
-import { countries, provinces } from "../data/checkout";
+import { countries, methods, provinces } from "../data/checkout";
 import { fmt, quote, toUsdCents, unitPrice } from "../lib/money";
 import { validate } from "../lib/validate";
 import { api } from "../lib/api";
@@ -101,17 +101,26 @@ function CheckoutForm() {
   };
   const bind = (k) => ({ name: k, value: v[k], onChange: set(k), onBlur: blur(k), error: errors[k] });
 
+  const changeMethod = (next) => {
+    setMethod(next);
+    setErrors((s) => ({ ...s, form: undefined }));
+  };
+
   const setCountry = (e) => {
     const c = e.target.value;
     setV((s) => ({ ...s, country: c, province: "" }));
-    setErrors((s) => ({ ...s, province: undefined, postal: undefined, phone: undefined }));
-    if (c !== "PK" && (method === "cod" || method === "easypaisa")) setMethod("card");
+    setErrors((s) => ({ ...s, province: undefined, postal: undefined, phone: undefined, form: undefined }));
+    if (c !== "PK" && (method === "cod" || method === "easypaisa")) changeMethod("card");
   };
 
   /* ---------- submit ---------- */
   const submit = async (e) => {
     e.preventDefault();
     if (sending) return;
+    if (methods.find((m) => m.id === method)?.demo) {
+      setErrors({ form: "That payment method is design-only here. Choose Card or Cash on delivery." });
+      return;
+    }
 
     const errs = validate(v, method);
     setErrors(errs);
@@ -212,8 +221,7 @@ function CheckoutForm() {
 
   const cta =
     method === "cod" ? "Place order"
-    : method === "paypal" ? "Continue to PayPal"
-    : method === "easypaisa" ? "Pay with Easypaisa"
+    : methods.find((m) => m.id === method)?.demo ? "Demo only"
     : "Pay securely";
 
   return (
@@ -304,9 +312,8 @@ function CheckoutForm() {
             <Section no="03" title="Payment">
               <Payment
                 method={method}
-                setMethod={setMethod}
+                setMethod={changeMethod}
                 country={v.country}
-                bind={bind}
                 usd={usd}
                 stripeOn={!!stripePromise}
               />
