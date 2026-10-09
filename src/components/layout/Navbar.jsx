@@ -82,8 +82,11 @@ export default function Navbar() {
 
   // close menus on route change
   useEffect(() => {
-    setMegaOpen(false);
-    setMobileOpen(false);
+    const frame = requestAnimationFrame(() => {
+      setMegaOpen(false);
+      setMobileOpen(false);
+    });
+    return () => cancelAnimationFrame(frame);
   }, [location.pathname]);
 
   useEffect(() => {

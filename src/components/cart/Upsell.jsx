@@ -7,7 +7,7 @@ const taster = sizes.find((s) => s.id === "60");
 
 export default function Upsell({ items }) {
   const add = useCart((s) => s.add);
-  const pick = flavors.find((f) => !items.some((i) => i.id === f.id));
+  const pick = flavors.find((f) => !items.some((i) => i.kind !== "bundle" && i.id === f.id));
   if (!pick) return null;
 
   return (

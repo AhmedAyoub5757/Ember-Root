@@ -147,6 +147,27 @@ body::after {
   .wave, .bubble { animation: none; }
 }
 
+@keyframes giftSwing {
+  0% { transform: rotate(0deg); }
+  28% { transform: rotate(4deg); }
+  55% { transform: rotate(-2.5deg); }
+  78% { transform: rotate(1deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gift-tag:hover > div,
+  .gift-tag:focus-within > div {
+    animation: giftSwing 1.2s ease-out;
+    transform-origin: top center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gift-tag:hover > div,
+  .gift-tag:focus-within > div { animation: none; }
+}
+
 html { scrollbar-gutter: stable; }
 
 /* Print the confirmation slip on its own */

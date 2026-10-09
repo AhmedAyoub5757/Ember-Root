@@ -167,8 +167,17 @@ export default function Confirmation() {
 
               <ul>
                 {o.items.map((it) => (
-                  <li key={`${it.id}-${it.ml}`} className="flex min-w-0 items-baseline gap-2 py-0.5">
-                    <span className="min-w-0 break-words">{it.qty} × {it.name} <span className="opacity-60">{it.ml} ml</span></span>
+                  <li key={`${it.kind || "bottle"}-${it.id}-${it.size}-${it.message || ""}`} className="flex min-w-0 items-baseline gap-2 py-0.5">
+                    <span className="min-w-0 break-words">
+                      {it.qty} × {it.name}
+                      {it.kind !== "bundle" && <span className="opacity-60"> {it.ml} ml</span>}
+                      {it.kind === "bundle" && it.parts?.length > 0 && (
+                        <span className="block opacity-60">{it.parts.join(" · ")}</span>
+                      )}
+                      {it.kind === "bundle" && it.message && (
+                        <span className="block italic opacity-60">Card: “{it.message}”</span>
+                      )}
+                    </span>
                     <span aria-hidden className="mb-1 min-w-3 flex-1 self-end border-b border-dotted border-soil/40" />
                     <span className="shrink-0 tabular-nums">{fmt(it.unit * it.qty)}</span>
                   </li>

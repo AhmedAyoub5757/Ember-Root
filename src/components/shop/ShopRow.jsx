@@ -53,7 +53,7 @@ const ShopRow = forwardRef(function ShopRow({ f, i, size, added, onAdd }, ref) {
         className="pointer-events-none absolute bottom-0 right-[22rem] z-10 hidden h-[190%] w-auto drop-shadow-[0_22px_20px_rgba(0,0,0,0.3)] xl:block"
       />
 
-      <div className="relative grid grid-cols-[4rem_minmax(0,1fr)_auto] items-center gap-x-4 gap-y-3 px-3 py-5 lg:grid-cols-[3rem_minmax(0,1.5fr)_minmax(0,1fr)_8rem_9rem] lg:gap-x-6 lg:py-7">
+      <div className="relative grid grid-cols-[3.5rem_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-3 px-2 py-5 sm:grid-cols-[4rem_minmax(0,1fr)_auto] sm:gap-x-4 sm:px-3 lg:grid-cols-[3rem_minmax(0,1.5fr)_minmax(0,1fr)_8rem_9rem] lg:gap-x-6 lg:py-7">
         {/* number on desktop, colour-block thumbnail on mobile */}
         <span className="label hidden lg:block">{f.no}</span>
         <span
@@ -73,7 +73,7 @@ const ShopRow = forwardRef(function ShopRow({ f, i, size, added, onAdd }, ref) {
         <div className="col-span-2 col-start-2 row-start-1 min-w-0 lg:col-span-1 lg:col-start-auto lg:row-start-auto">
           <Link
             to={`/flavor/${f.id}`}
-            className="display block text-[clamp(2rem,4.2vw,3.75rem)] after:absolute after:inset-0"
+            className="display block break-words text-[clamp(1.65rem,8vw,3.75rem)] leading-[0.95] after:absolute after:inset-0 sm:text-[clamp(2rem,4.2vw,3.75rem)]"
           >
             {f.name}
           </Link>
@@ -106,7 +106,7 @@ const ShopRow = forwardRef(function ShopRow({ f, i, size, added, onAdd }, ref) {
           type="button"
           onClick={() => onAdd(f.id)}
           aria-label={`Add ${f.name}, ${size.ml} ml, to cart`}
-          className="label relative z-10 col-start-3 row-start-3 inline-flex h-11 min-w-[7rem] items-center justify-between gap-3 justify-self-end border border-current px-4 transition-transform duration-200 hover:-translate-y-0.5 lg:col-start-auto lg:row-start-auto"
+          className="label relative z-10 col-start-3 row-start-3 inline-flex h-11 min-w-0 items-center justify-between gap-2 justify-self-end border border-current px-3 transition-transform duration-200 hover:-translate-y-0.5 sm:min-w-[7rem] sm:px-4 lg:col-start-auto lg:row-start-auto"
         >
           <span aria-live="polite">{added ? "Added ✓" : "Add"}</span>
           <span aria-hidden>{added ? "" : "+"}</span>

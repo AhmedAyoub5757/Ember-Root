@@ -5,7 +5,7 @@ import { bottleFor } from "../../lib/assets";
 import HeatRuler from "../ui/HeatRuler";
 
 const range = [
-  { label: "All sauces", to: "/shop" },
+  { label: "Shop all sauces", to: "/shop" },
   { label: "Gift sets", to: "/shop/gifts" },
   { label: "The trio box", to: "/shop/trio" },
   { label: "Heat guide", to: "/heat-guide" },

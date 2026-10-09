@@ -2,10 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Elements, useElements, useStripe } from "@stripe/react-stripe-js";
-import { flavors } from "../data/products";
-import { sizes } from "../data/productExtra";
 import { countries, methods, provinces } from "../data/checkout";
-import { fmt, quote, toUsdCents, unitPrice } from "../lib/money";
+import { fmt, quote, resolveItem, toUsdCents } from "../lib/money";
 import { validate } from "../lib/validate";
 import { api } from "../lib/api";
 import { appearance, fonts, stripePromise } from "../lib/stripe";
@@ -73,9 +71,8 @@ function CheckoutForm() {
     () =>
       items
         .map((item) => {
-          const f = flavors.find((x) => x.id === item.id);
-          const size = sizes.find((s) => s.id === item.size);
-          return f && size ? { item, f, size, unit: unitPrice(f, item.size) } : null;
+          const resolved = resolveItem(item);
+          return resolved ? { item, ...resolved } : null;
         })
         .filter(Boolean),
     [items]
@@ -144,7 +141,11 @@ function CheckoutForm() {
       }
 
       // Reuse the same order if nothing changed (e.g. retrying after a declined card)
-      const sig = JSON.stringify([method, v, items.map(({ id, size, qty }) => [id, size, qty])]);
+      const sig = JSON.stringify([
+        method,
+        v,
+        items.map(({ kind, id, size, qty, picks, message }) => [kind, id, size, qty, picks, message]),
+      ]);
       let att = attempt.current;
       if (!att || att.sig !== sig) {
         const data = await api("/orders", {
@@ -152,7 +153,9 @@ function CheckoutForm() {
           body: {
             ...v,
             method,
-            items: items.map(({ id, size, qty }) => ({ id, size, qty })), // IDs only, never prices
+            items: items.map(({ kind, id, size, picks, message, qty }) => ({
+              kind, id, size, picks, message, qty,
+            })), // IDs only, never prices
           },
         });
         att = attempt.current = { sig, ...data };
@@ -221,7 +224,7 @@ function CheckoutForm() {
 
   const cta =
     method === "cod" ? "Place order"
-    : methods.find((m) => m.id === method)?.demo ? "Demo only"
+    : methods.find((m) => m.id === method)?.demo ? "Coming soon"
     : "Pay securely";
 
   return (

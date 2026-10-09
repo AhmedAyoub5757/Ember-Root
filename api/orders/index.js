@@ -2,10 +2,8 @@ import { randomBytes } from "node:crypto";
 import { sql } from "../_lib/db.js";
 import { getStripe } from "../_lib/stripe.js";
 import { toOrder } from "../_lib/orders.js";
-import { flavors } from "../../src/data/products.js";
-import { sizes } from "../../src/data/productExtra.js";
 import { countries } from "../../src/data/checkout.js";
-import { quote, toUsdCents, unitPrice } from "../../src/lib/money.js";
+import { quote, resolveItem, toUsdCents } from "../../src/lib/money.js";
 import { validate } from "../../src/lib/validate.js";
 
 const METHODS = ["cod", "card", "paypal", "easypaisa"];
@@ -51,15 +49,41 @@ export default async function handler(req, res) {
     const raw = Array.isArray(b.items) ? b.items.slice(0, 20) : [];
     if (raw.length === 0) return res.status(422).json({ error: "Your cart is empty." });
 
+    const normalizedItems = [];
     const lines = [];
     for (const it of raw) {
-      const f = flavors.find((x) => x.id === it?.id);
-      const size = sizes.find((x) => x.id === it?.size);
-      const qty = Number(it?.qty);
-      if (!f || !size || !Number.isInteger(qty) || qty < 1 || qty > 12) {
+      const input = {
+        kind: it?.kind === "bundle" ? "bundle" : "bottle",
+        id: it?.id,
+        size: it?.size,
+        picks: Array.isArray(it?.picks) ? it.picks : [],
+        message: it?.message,
+        qty: it?.qty,
+      };
+      const resolved = resolveItem(input);
+      if (!resolved) {
         return res.status(422).json({ error: "Something in your cart is out of date. Please add it again." });
       }
-      lines.push({ id: f.id, name: f.name, size: size.id, ml: size.ml, qty, unit: unitPrice(f, size.id) });
+      normalizedItems.push({
+        kind: resolved.kind,
+        id: resolved.id,
+        size: resolved.size,
+        picks: resolved.parts.map((part) => part.id),
+        message: resolved.message,
+        qty: resolved.qty,
+      });
+      lines.push({
+        kind: resolved.kind,
+        id: resolved.id,
+        name: resolved.name,
+        size: resolved.size,
+        ...(resolved.kind === "bottle" ? { ml: resolved.sizeObj.ml } : {}),
+        qty: resolved.qty,
+        unit: resolved.unit,
+        full: resolved.full,
+        parts: resolved.parts.map((part) => part.name),
+        message: resolved.message,
+      });
     }
 
     const fields = validate(v, method);
@@ -73,7 +97,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const q = quote(lines, { country: v.country, method });
+    const q = quote(normalizedItems, { country: v.country, method });
     const isCard = method === "card";
     const chargeAmount = isCard ? toUsdCents(q.total) : null;
     const chargeCurrency = isCard ? "usd" : null;

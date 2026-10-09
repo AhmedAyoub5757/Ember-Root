@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 const S = ({ children }) => (
   <svg
     viewBox="0 0 100 100"

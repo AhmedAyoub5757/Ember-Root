@@ -36,7 +36,7 @@ export default function Hero() {
   const didDrag = useRef(false);
 
   const [active, setActive] = useState(0);
-  const [auto, setAuto] = useState(true);
+  const auto = !reduce;
   const [dragging, setDragging] = useState(false);
   const [inView, setInView] = useState(true);
   const setHeroInView = useHeroTheme((s) => s.setInView);
@@ -88,7 +88,6 @@ export default function Hero() {
   };
 
   /* ---------- autoplay ---------- */
-  useEffect(() => { if (reduce) setAuto(false); }, [reduce]);
   useEffect(() => { if (!auto) progress.set(0); }, [auto, progress]);
 
   useEffect(() => {

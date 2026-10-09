@@ -1,4 +1,5 @@
 import { timingSafeEqual } from "node:crypto";
+import { Buffer } from "node:buffer";
 import { etaFor } from "../../src/data/checkout.js";
 
 // DB row -> the shape the confirmation page already expects

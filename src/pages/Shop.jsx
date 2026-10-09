@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { flavors } from "../data/products";
 import { defaultSize, sizes } from "../data/productExtra";
@@ -62,13 +62,13 @@ export default function Shop() {
   };
 
   return (
-    <div className="px-5 pb-28 pt-10 lg:px-8 lg:pb-36 lg:pt-14">
+    <div className="overflow-hidden px-4 pb-28 pt-8 sm:px-5 lg:px-8 lg:pb-36 lg:pt-14">
       <div className="mx-auto max-w-[1400px]">
         {/* header */}
-        <header className="grid grid-cols-12 gap-x-8 gap-y-8">
+        <header className="grid grid-cols-12 gap-x-6 gap-y-7 sm:gap-x-8 sm:gap-y-8">
           <div className="col-span-12 lg:col-span-8">
             <p className="label opacity-60">Shop / The catalogue</p>
-            <h1 className="display mt-5 text-[clamp(3.2rem,9vw,8.5rem)] font-semibold">
+            <h1 className="display mt-5 text-[clamp(2.9rem,13vw,8.5rem)] font-semibold">
               {["The whole", "field."].map((t, i) => (
                 <span key={t} className={`block overflow-hidden pb-[0.12em] ${i ? "lg:pl-[10vw]" : ""}`}>
                   <motion.span
@@ -95,8 +95,19 @@ export default function Shop() {
           </div>
         </header>
 
+        <p className="label mt-8 flex flex-wrap items-center gap-x-2 gap-y-2 opacity-60 lg:mt-10">
+          <span>Looking for a set?</span>
+          <Link to="/shop/trio" className="border-b border-current pb-0.5 transition-opacity hover:opacity-100">
+            The Trio Box
+          </Link>
+          <span aria-hidden>·</span>
+          <Link to="/shop/gifts" className="border-b border-current pb-0.5 transition-opacity hover:opacity-100">
+            Gift sets
+          </Link>
+        </p>
+
         {/* controls */}
-        <div className="mt-14 grid grid-cols-12 gap-x-10 gap-y-9 lg:mt-20">
+        <div className="mt-12 grid grid-cols-12 gap-x-6 gap-y-8 sm:gap-x-10 sm:gap-y-9 lg:mt-20">
           <div className="col-span-12 lg:col-span-6">
             <HeatFilter
               active={heat}
@@ -124,7 +135,7 @@ export default function Shop() {
         </div>
 
         {/* the ledger */}
-        <div className="mt-14 lg:mt-20">
+        <div className="mt-12 lg:mt-20">
           <div className="label hidden grid-cols-[3rem_minmax(0,1.5fr)_minmax(0,1fr)_8rem_9rem] gap-x-6 px-3 pb-3 opacity-60 lg:grid">
             <span>No.</span>
             <span>Variety</span>

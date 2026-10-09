@@ -97,7 +97,7 @@ export default function Payment({ method, setMethod, country, usd, stripeOn }) {
                 <span className="label mt-0.5 block opacity-70">{m.via}</span>
               </span>
               <span className="label relative whitespace-nowrap text-right opacity-70">
-                {m.demo ? "Demo" : m.id === "cod" && COD_FEE > 0 ? `+ ${fmt(COD_FEE)}` : "No fee"}
+                {m.demo ? "Coming soon" : m.id === "cod" && COD_FEE > 0 ? `+ ${fmt(COD_FEE)}` : "No fee"}
               </span>
             </button>
           );

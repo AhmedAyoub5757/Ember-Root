@@ -45,25 +45,42 @@ export default function Summary({ lines, q, country }) {
         </div>
 
         <ul className="lg:mt-5">
-          {lines.map(({ item, f, size, unit }) => (
-            <li key={`${item.id}-${item.size}`} className="hair grid min-w-0 grid-cols-[3.25rem_minmax(0,1fr)] gap-x-3 py-4 sm:gap-x-4">
-              <span className="relative block h-[4.25rem] w-[3.25rem] overflow-hidden" style={{ background: f.color }}>
-                <img
-                  src={bottleFor(f.id)}
-                  alt=""
-                  draggable={false}
-                  className="absolute inset-x-0 -bottom-1 mx-auto h-[112%] w-auto max-w-none object-contain"
-                />
+          {lines.map(({ item, f, unit, full, name, sizeObj, parts, key }) => (
+            <li key={key} className="hair grid min-w-0 grid-cols-[3.25rem_minmax(0,1fr)] gap-x-3 py-4 sm:gap-x-4">
+              <span className="relative block h-[4.25rem] w-[3.25rem] overflow-hidden" style={{ background: f?.color || parts[0]?.color || "#7A3B22" }}>
+                {f ? (
+                  <img src={bottleFor(f.id)} alt="" draggable={false} className="absolute inset-x-0 -bottom-1 mx-auto h-[112%] w-auto max-w-none object-contain" />
+                ) : (
+                  <>
+                    {parts.slice(0, 3).map((part, index) => (
+                      <img
+                        key={part.id}
+                        src={bottleFor(part.id)}
+                        alt=""
+                        className="absolute bottom-0 h-[4.5rem] w-auto max-w-none"
+                        style={{ left: `${index * 10 - 5}px`, zIndex: 3 - index }}
+                      />
+                    ))}
+                    {parts.length > 3 && <span className="absolute bottom-1 right-1 z-10 bg-paper px-1 text-xs">+{parts.length - 3}</span>}
+                  </>
+                )}
               </span>
               <div className="min-w-0">
                 <div className="flex items-baseline gap-2">
-                  <p className="display-s truncate text-lg leading-tight">{f.name}</p>
+                  <p className="display-s truncate text-lg leading-tight">{name}</p>
                   <span aria-hidden className="mb-1 min-w-4 flex-1 self-end border-b border-dotted border-current opacity-40" />
                   <p className="display-s shrink-0 text-lg tabular-nums">{fmt(unit * item.qty)}</p>
                 </div>
                 <p className="label mt-1 opacity-60">
-                  {size.ml} ml · × {item.qty}
+                  {f ? `${sizeObj.ml} ml · × ${item.qty}` : `${parts.length} varieties · ${sizeObj.ml} ml each · × ${item.qty}`}
                 </p>
+                {!f && (
+                  <>
+                    <p className="label truncate opacity-60">{parts.map((part) => part.name).join(" · ")}</p>
+                    {item.message && <p className="label truncate italic opacity-70">Card: {item.message}</p>}
+                    <p className="label opacity-70">Saves {fmt((full - unit) * item.qty)}</p>
+                  </>
+                )}
               </div>
             </li>
           ))}

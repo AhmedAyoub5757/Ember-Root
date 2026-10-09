@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
-import { flavors } from "../../data/products";
-import { sizes } from "../../data/productExtra";
-import { fmt, totals, unitPrice } from "../../lib/money";
+import { bottleFor } from "../../lib/assets";
+import { fmt, resolveItem, totals } from "../../lib/money";
 import { useCart } from "../../store/cart";
 import paper from "../../assets/images/paper.jpg";
 import Roll from "../ui/Roll";
@@ -23,12 +22,8 @@ export default function CartDrawer() {
 
   const lines = useMemo(
     () => items
-      .map((item) => ({
-        item,
-        f: flavors.find((flavor) => flavor.id === item.id),
-        size: sizes.find((option) => option.id === item.size),
-      }))
-      .filter((line) => line.f && line.size),
+      .map((item) => resolveItem(item))
+      .filter(Boolean),
     [items]
   );
   const t = useMemo(() => totals(items), [items]);
@@ -104,7 +99,7 @@ export default function CartDrawer() {
               </button>
             </header>
 
-            {items.length === 0 ? (
+            {lines.length === 0 ? (
               <div className="flex flex-1 flex-col overflow-y-auto px-6 pb-8 pt-10">
                 <p className="display text-5xl font-semibold">
                   Nothing<br />on the slip.
@@ -122,40 +117,77 @@ export default function CartDrawer() {
                   <ShipRuler sub={t.sub} />
                   <ul className="mt-4 lg:mt-6">
                     <AnimatePresence initial={false}>
-                      {lines.map(({ item, f, size }) => {
-                        const lineTotal = unitPrice(f, item.size) * item.qty;
+                      {lines.map((line) => {
+                        const lineTotal = line.unit * line.qty;
+                        const isBundle = line.kind === "bundle";
                         return (
                           <motion.li
-                            key={`${item.id}-${item.size}`}
+                            key={line.key}
                             initial={{ opacity: 0, y: 8 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -8 }}
                             className="hair flex min-w-0 items-center gap-3 py-2.5 lg:py-3"
                           >
+                            {isBundle ? (
+                              <span
+                                className="relative h-12 w-12 shrink-0 overflow-hidden"
+                                style={{ background: line.parts[0].color }}
+                                aria-hidden
+                              >
+                                {line.parts.slice(0, 3).map((part, index) => (
+                                  <img
+                                    key={part.id}
+                                    src={bottleFor(part.id)}
+                                    alt=""
+                                    className="absolute bottom-0 h-12 w-auto max-w-none"
+                                    style={{ left: `${index * 10 - 4}px`, zIndex: 3 - index }}
+                                  />
+                                ))}
+                                {line.parts.length > 3 && (
+                                  <span className="absolute bottom-1 right-1 z-10 bg-paper px-1 text-xs">
+                                    +{line.parts.length - 3}
+                                  </span>
+                                )}
+                              </span>
+                            ) : null}
                             <div className="min-w-0 flex-1">
-                              <p className="display-s truncate text-lg leading-tight">{f.name}</p>
+                              <p className="display-s truncate text-lg leading-tight">{line.name}</p>
                               <p className="label mt-1 truncate opacity-60">
-                                {size.ml} ml · {size.label} · {fmt(lineTotal)}
+                                {isBundle
+                                  ? `${line.parts.length} varieties · ${line.sizeObj.ml} ml each`
+                                  : `${line.sizeObj.ml} ml · ${line.sizeObj.label}`}{" "}
+                                · {fmt(lineTotal)}
                               </p>
+                              {isBundle && (
+                                <>
+                                  <p className="label truncate opacity-60">
+                                    {line.parts.map((part) => part.name).join(" · ")}
+                                  </p>
+                                  {line.message && (
+                                    <p className="label truncate italic opacity-70">Card: {line.message}</p>
+                                  )}
+                                  <p className="label opacity-70">Saves {fmt((line.full - line.unit) * line.qty)}</p>
+                                </>
+                              )}
                             </div>
                             <div className="label flex shrink-0 items-center border border-current">
                               <button
                                 type="button"
-                                aria-label={`Decrease quantity of ${f.name}`}
-                                disabled={item.qty <= 1}
-                                onClick={() => setQty(item.id, item.size, item.qty - 1)}
+                                aria-label={`Decrease quantity of ${line.name}`}
+                                disabled={line.qty <= 1}
+                                onClick={() => setQty(line.key, line.qty - 1)}
                                 className="h-8 w-7 disabled:opacity-30"
                               >
                                 −
                               </button>
                               <span className="w-7 text-center tabular-nums" aria-live="polite">
-                                {String(item.qty).padStart(2, "0")}
+                                {String(line.qty).padStart(2, "0")}
                               </span>
                               <button
                                 type="button"
-                                aria-label={`Increase quantity of ${f.name}`}
-                                disabled={item.qty >= 12}
-                                onClick={() => setQty(item.id, item.size, item.qty + 1)}
+                                aria-label={`Increase quantity of ${line.name}`}
+                                disabled={line.qty >= 12}
+                                onClick={() => setQty(line.key, line.qty + 1)}
                                 className="h-8 w-7 disabled:opacity-30"
                               >
                                 +
@@ -163,8 +195,8 @@ export default function CartDrawer() {
                             </div>
                             <button
                               type="button"
-                              aria-label={`Remove ${f.name}`}
-                              onClick={() => remove(item.id, item.size)}
+                              aria-label={`Remove ${line.name}`}
+                              onClick={() => remove(line.key)}
                               className="label shrink-0 px-1 opacity-60 transition-opacity hover:opacity-100"
                             >
                               ×
