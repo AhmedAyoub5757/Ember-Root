@@ -161,7 +161,7 @@ export default function Auth() {
           transition={move}
           className="relative z-0 flex flex-1 flex-col bg-paper lg:absolute lg:inset-y-0 lg:left-0 lg:w-1/2 lg:flex-none lg:overflow-y-auto lg:[scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden"
         >
-          <div className="mx-auto flex w-full max-w-[520px] flex-1 flex-col px-5 py-6 lg:px-10 lg:py-8">
+          <div className="mx-auto flex w-full max-w-[520px] flex-1 flex-col px-4 py-5 sm:px-5 lg:px-10 lg:py-8">
             <div className="flex items-center justify-between gap-4">
               <Link to="/" aria-label="Ember & Root, back to the site">
                 <img src={logo} alt="" className="h-9 w-auto mix-blend-multiply" />
@@ -169,10 +169,10 @@ export default function Auth() {
               <Link to="/" className="label border-b border-current pb-0.5">Back to the site →</Link>
             </div>
 
-            <div className="my-auto py-8">
+            <div className="my-auto py-5 lg:py-8">
               <p className="label opacity-60">{copy.kicker}</p>
 
-              <div role="group" aria-label="Account" className="mt-4 flex gap-7 border-b border-soil/20">
+              <div role="group" aria-label="Account" className="mt-4 flex gap-5 border-b border-soil/20 sm:gap-7">
                 {[["signin", "Sign in"], ["signup", "Create account"]].map(([id, label]) => {
                   const on = mode === id;
                   return (
@@ -196,7 +196,7 @@ export default function Auth() {
                 })}
               </div>
 
-              <h1 className="display mt-8 text-[clamp(2.8rem,5.4vw,5.2rem)] font-semibold">
+              <h1 className="display mt-6 text-[clamp(2.8rem,5.4vw,5.2rem)] font-semibold lg:mt-8">
                 <AnimatePresence mode="wait">
                   <motion.span key={mode} className="block" initial="hidden" animate="show" exit="exit">
                     {copy.lines.map((t, i) => (
@@ -374,10 +374,10 @@ export default function Auth() {
           initial={false}
           animate={{ x: desktop && signup ? "-100%" : "0%", backgroundColor: PANEL[mode] }}
           transition={move}
-          className="relative z-10 order-first h-[36svh] min-h-[240px] overflow-hidden text-paper lg:absolute lg:inset-y-0 lg:left-1/2 lg:order-none lg:h-auto lg:min-h-0 lg:w-1/2"
+          className="relative z-10 order-first h-24 overflow-hidden text-paper lg:absolute lg:inset-y-0 lg:left-1/2 lg:order-none lg:h-auto lg:min-h-0 lg:w-1/2"
         >
           {/* the giant tone-on-tone word */}
-          <div className="absolute inset-0 grid place-items-center">
+          <div className="absolute inset-0 hidden place-items-center lg:grid">
             <span className="block overflow-hidden px-[0.05em] py-[0.08em]">
               <AnimatePresence mode="wait">
                 <motion.span
@@ -393,11 +393,11 @@ export default function Auth() {
             </span>
           </div>
 
-          <p className="label absolute left-5 top-5 opacity-80 lg:left-8 lg:top-8">
+          <p className="label absolute left-5 top-5 hidden opacity-80 lg:left-8 lg:top-8 lg:block">
             The Field Journal / {copy.tag}
           </p>
 
-          <div className="absolute inset-0 flex items-center justify-center px-8 pb-4 lg:pb-16">
+          <div className="absolute inset-0 hidden items-center justify-center px-8 pb-4 lg:flex lg:pb-16">
             <AnimatePresence mode="wait">
               <motion.div
                 key={copy.word}

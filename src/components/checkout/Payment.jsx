@@ -22,7 +22,7 @@ export default function Payment({ method, setMethod, country, usd, stripeOn }) {
 
   const panel = {
     card: (
-      <div>
+      <div className="min-w-0 overflow-hidden">
         {stripeOn ? (
           <PaymentElement
             options={{
@@ -81,7 +81,7 @@ export default function Payment({ method, setMethod, country, usd, stripeOn }) {
               aria-checked={on}
               tabIndex={on ? 0 : -1}
               onClick={() => setMethod(m.id)}
-              className="hair relative grid w-full min-w-0 grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-x-2 px-3 py-4 text-left transition-colors duration-300 sm:gap-x-3"
+              className="hair relative grid w-full min-w-0 grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-x-2 px-2 py-4 text-left transition-colors duration-300 sm:grid-cols-[2.5rem_minmax(0,1fr)_auto] sm:gap-x-3 sm:px-3"
               style={on ? { color: "#F2EBDD" } : undefined}
             >
               {on && (
@@ -96,7 +96,7 @@ export default function Payment({ method, setMethod, country, usd, stripeOn }) {
                 <span className="display-s block text-2xl">{m.name}</span>
                 <span className="label mt-0.5 block opacity-70">{m.via}</span>
               </span>
-              <span className="label relative whitespace-nowrap text-right opacity-70">
+              <span className="label relative max-w-[7rem] text-right text-[0.62rem] leading-tight opacity-70 sm:max-w-none sm:whitespace-nowrap sm:text-[0.7rem]">
                 {m.demo ? "Coming soon" : m.id === "cod" && COD_FEE > 0 ? `+ ${fmt(COD_FEE)}` : "No fee"}
               </span>
             </button>

@@ -66,8 +66,8 @@ export default function Summary({ lines, q, country }) {
                 )}
               </span>
               <div className="min-w-0">
-                <div className="flex items-baseline gap-2">
-                  <p className="display-s truncate text-lg leading-tight">{name}</p>
+                <div className="flex min-w-0 items-baseline gap-2">
+                  <p className="display-s min-w-0 truncate text-lg leading-tight">{name}</p>
                   <span aria-hidden className="mb-1 min-w-4 flex-1 self-end border-b border-dotted border-current opacity-40" />
                   <p className="display-s shrink-0 text-lg tabular-nums">{fmt(unit * item.qty)}</p>
                 </div>

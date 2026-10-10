@@ -236,7 +236,7 @@ function CheckoutForm() {
     : "Pay securely";
 
   return (
-    <div className="px-5 pb-24 pt-10 lg:px-8 lg:pt-14">
+    <div className="px-4 pb-24 pt-8 sm:px-5 lg:px-8 lg:pt-14">
       <div className="mx-auto max-w-[1400px]">
         <div>
           <p className="label flex flex-wrap gap-x-3 opacity-70">
@@ -262,14 +262,14 @@ function CheckoutForm() {
           </h1>
         </div>
 
-        <div className="mt-10 grid grid-cols-12 gap-x-12 gap-y-8 lg:mt-14">
-          <aside className="order-1 col-span-12 lg:order-2 lg:col-span-5">
+        <div className="mt-8 grid grid-cols-12 gap-x-12 gap-y-8 sm:mt-10 lg:mt-14">
+          <aside className="order-2 col-span-12 min-w-0 lg:order-2 lg:col-span-5">
             <div className="lg:sticky lg:top-[128px]">
               <Summary lines={lines} q={q} country={v.country} />
             </div>
           </aside>
 
-          <form onSubmit={submit} noValidate className="order-2 col-span-12 lg:order-1 lg:col-span-7">
+          <form onSubmit={submit} noValidate className="order-1 col-span-12 min-w-0 lg:order-1 lg:col-span-7">
             <Section no="01" title="Contact">
               <div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
                 <Field label="Full name" autoComplete="name" className="sm:col-span-2" {...bind("name")} />
@@ -337,7 +337,7 @@ function CheckoutForm() {
             <button
               type="submit"
               disabled={sending}
-              className="label flex h-16 w-full items-center justify-between bg-soil px-6 text-paper transition-colors duration-200 hover:bg-chili disabled:opacity-60"
+              className="label flex h-16 w-full items-center justify-between gap-4 bg-soil px-4 text-paper transition-colors duration-200 hover:bg-chili disabled:opacity-60 sm:px-6"
             >
               <span>{sending ? "Sealing the slip…" : cta}</span>
               <span className="flex items-center gap-4">

@@ -10,7 +10,7 @@ export default function Field({
     Tag === "select" ? "cursor-pointer appearance-none pr-8" : Tag === "textarea" ? "resize-none" : "";
 
   return (
-    <div className={`scroll-mt-40 ${className}`}>
+    <div className={`min-w-0 scroll-mt-40 ${className}`}>
       <label htmlFor={id} className="label flex justify-between gap-4 opacity-70">
         <span>{label}</span>
         {optional && <span>Optional</span>}
@@ -22,7 +22,7 @@ export default function Field({
           name={name}
           aria-invalid={!!error}
           aria-describedby={described}
-          className={`${base} ${extra} ${error ? "border-chili" : "border-soil/40 focus:border-soil"}`}
+          className={`${base} min-w-0 max-w-full ${extra} ${error ? "border-chili" : "border-soil/40 focus:border-soil"}`}
           {...rest}
         >
           {children}
