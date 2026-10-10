@@ -1,8 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
-    { "source": "/((?!api/|@|src/|node_modules/)[^.]*)", "destination": "/index.html" }
-  ],
+  "regions": ["iad1"],
+  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }],
   "headers": [
     {
       "source": "/(.*)",
@@ -13,6 +12,5 @@
       ]
     }
   ],
-  "crons": [{ "path": "/api/cron/cleanup", "schedule": "0 3 * * *" }],
-  "regions": ["c-14.us-east-1"]
+  "crons": [{ "path": "/api/cron/cleanup", "schedule": "0 3 * * *" }]
 }
