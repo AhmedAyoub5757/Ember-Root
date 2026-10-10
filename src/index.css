@@ -14,7 +14,7 @@
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 
 html {
   scrollbar-width: thin;

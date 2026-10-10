@@ -53,8 +53,8 @@ export default function Summary({ lines, q, country }) {
 
         <ul className="lg:mt-5">
           {lines.map(({ item, f, unit, full, name, sizeObj, parts, key }) => (
-            <li key={key} className="hair grid min-w-0 grid-cols-[3.25rem_minmax(0,1fr)] gap-x-3 py-4 sm:gap-x-4">
-              <span className="relative block h-[4.25rem] w-[3.25rem] overflow-hidden" style={{ background: f?.color || parts[0]?.color || "#7A3B22" }}>
+            <li key={key} className="hair grid min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] gap-x-2.5 py-4 sm:grid-cols-[3.25rem_minmax(0,1fr)] sm:gap-x-4">
+              <span className="relative block h-[3.5rem] w-[2.75rem] overflow-hidden sm:h-[4.25rem] sm:w-[3.25rem]" style={{ background: f?.color || parts[0]?.color || "#7A3B22" }}>
                 {f ? (
                   <img src={bottleFor(f.id)} alt="" draggable={false} className="absolute inset-x-0 -bottom-1 mx-auto h-[112%] w-auto max-w-none object-contain" />
                 ) : (

@@ -52,7 +52,7 @@ export default function Account() {
   };
 
   return (
-    <div className="px-4 pb-24 pt-8 sm:px-5 lg:px-8 lg:pb-36 lg:pt-14">
+    <div className="overflow-x-hidden px-4 pb-24 pt-8 sm:px-5 lg:px-8 lg:pb-36 lg:pt-14">
       <div className="mx-auto max-w-[1400px]">
         <p className="label opacity-60">Account / Your journal</p>
         <h1 className="display mt-4 text-[clamp(2.4rem,8vw,7.5rem)] font-semibold">
@@ -70,8 +70,8 @@ export default function Account() {
           ))}
         </h1>
 
-        <div className="mt-10 grid grid-cols-12 gap-x-12 gap-y-12 sm:mt-14 lg:mt-20">
-          <aside className="col-span-12 min-w-0 lg:col-span-5">
+        <div className="mt-10 grid grid-cols-1 gap-y-12 sm:mt-14 lg:mt-20 lg:grid-cols-12 lg:gap-x-12">
+          <aside className="min-w-0 lg:col-span-5">
             <div className="lg:sticky lg:top-[128px]">
               <div className="overflow-hidden py-1 sm:overflow-visible sm:py-3">
                 <MemberCard name={user.name} memberNo={user.memberNo} className="mx-auto w-full max-w-[420px] lg:mx-0" />
@@ -107,7 +107,7 @@ export default function Account() {
             </div>
           </aside>
 
-          <section className="col-span-12 min-w-0 lg:col-span-7" aria-labelledby="orders-title">
+          <section className="min-w-0 lg:col-span-7" aria-labelledby="orders-title">
             <p id="orders-title" className="label opacity-60">Order slips</p>
 
             {orders === null && <p className="label mt-6 opacity-60">Finding your slips…</p>}

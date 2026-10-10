@@ -239,7 +239,7 @@ function CheckoutForm() {
     : "Pay securely";
 
   return (
-    <div className="px-4 pb-24 pt-8 sm:px-5 lg:px-8 lg:pt-14">
+    <div className="overflow-x-hidden px-4 pb-24 pt-8 sm:px-5 lg:px-8 lg:pt-14">
       <div className="mx-auto max-w-[1400px]">
         <div>
           <p className="label flex flex-wrap items-center gap-x-3 gap-y-1 opacity-70">
@@ -268,15 +268,15 @@ function CheckoutForm() {
           </h1>
         </div>
 
-        <div className="mt-8 grid grid-cols-12 gap-x-12 gap-y-8 sm:mt-10 lg:mt-14">
+        <div className="mt-8 grid grid-cols-1 gap-y-8 sm:mt-10 lg:mt-14 lg:grid-cols-12 lg:gap-x-12">
           {/* On mobile, order summary is on top (collapsible accordion), on desktop on the right */}
-          <aside className="order-1 col-span-12 min-w-0 lg:order-2 lg:col-span-5">
+          <aside className="order-1 min-w-0 lg:order-2 lg:col-span-5">
             <div className="lg:sticky lg:top-[128px]">
               <Summary lines={lines} q={q} country={v.country} />
             </div>
           </aside>
 
-          <form onSubmit={submit} noValidate className="order-2 col-span-12 min-w-0 lg:order-1 lg:col-span-7">
+          <form onSubmit={submit} noValidate className="order-2 min-w-0 lg:order-1 lg:col-span-7">
             <Section no="01" title="Contact">
               <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2 sm:gap-y-7">
                 <Field label="Full name" autoComplete="name" className="sm:col-span-2" {...bind("name")} />

@@ -84,7 +84,7 @@ export default function Payment({ method, setMethod, country, usd, stripeOn }) {
               aria-checked={on}
               tabIndex={on ? 0 : -1}
               onClick={() => setMethod(m.id)}
-              className="hair relative grid w-full min-w-0 grid-cols-[1.75rem_minmax(0,1fr)_auto] items-center gap-x-2 px-2.5 py-3.5 text-left transition-colors duration-300 sm:grid-cols-[2.5rem_minmax(0,1fr)_auto] sm:gap-x-3 sm:px-3 sm:py-4"
+              className="hair relative grid w-full min-w-0 grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-x-2 px-2 py-3 text-left transition-colors duration-300 sm:grid-cols-[2.5rem_minmax(0,1fr)_auto] sm:gap-x-3 sm:px-3 sm:py-4"
               style={on ? { color: "#F2EBDD" } : undefined}
             >
               {on && (
