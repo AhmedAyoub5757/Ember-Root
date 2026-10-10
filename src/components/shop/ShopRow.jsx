@@ -1,6 +1,8 @@
 import { forwardRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { bottleFor } from "../../lib/assets";
 import { inkFor } from "../../lib/color";
 import { fmt, unitPrice } from "../../lib/money";
@@ -108,8 +110,8 @@ const ShopRow = forwardRef(function ShopRow({ f, i, size, added, onAdd }, ref) {
           aria-label={`Add ${f.name}, ${size.ml} ml, to cart`}
           className="label relative z-10 col-start-3 row-start-3 inline-flex h-11 min-w-0 items-center justify-between gap-2 justify-self-end border border-current px-3 transition-transform duration-200 hover:-translate-y-0.5 sm:min-w-[7rem] sm:px-4 lg:col-start-auto lg:row-start-auto"
         >
-          <span aria-live="polite">{added ? "Added ✓" : "Add"}</span>
-          <span aria-hidden>{added ? "" : "+"}</span>
+          <span aria-live="polite">{added ? "Added" : "Add"}</span>
+          <FontAwesomeIcon icon={added ? faCheck : faPlus} className="text-xs" aria-hidden />
         </button>
       </div>
     </motion.li>

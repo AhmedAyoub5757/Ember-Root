@@ -10,7 +10,7 @@ export default function MemberCard({ name = "", memberNo, stamped = false, onDar
 
   return (
     <div
-      className={`relative aspect-[1.6/1] -rotate-3 text-soil ${className}`}
+      className={`relative aspect-[1.6/1] rotate-0 transition-transform duration-300 sm:-rotate-3 text-soil ${className}`}
       style={{
         backgroundColor: onDark ? "#F2EBDD" : "#E6DCC6",
         backgroundImage: `url(${paper})`,
@@ -24,23 +24,23 @@ export default function MemberCard({ name = "", memberNo, stamped = false, onDar
       />
       <div className="pointer-events-none absolute inset-2 border border-soil/25" />
 
-      <div className="absolute inset-x-5 top-8 flex justify-between">
-        <span className="label">Ember &amp; Root</span>
-        <span className="label opacity-60">Grower's card</span>
+      <div className="absolute inset-x-4 top-5 flex justify-between sm:inset-x-5 sm:top-8">
+        <span className="label text-[0.7rem] sm:text-xs">Ember &amp; Root</span>
+        <span className="label text-[0.7rem] opacity-60 sm:text-xs">Grower's card</span>
       </div>
 
-      <div className="absolute inset-x-5 top-[40%]">
-        <p className="label opacity-60">Member</p>
-        <p className="display-s mt-1 truncate text-[clamp(1.35rem,2.6vw,2.1rem)] italic">
+      <div className="absolute inset-x-4 top-[38%] sm:inset-x-5 sm:top-[40%]">
+        <p className="label text-[0.7rem] opacity-60 sm:text-xs">Member</p>
+        <p className="display-s mt-1 truncate text-[clamp(1.2rem,4vw,2.1rem)] italic">
           {shown || <span className="opacity-35">Your name</span>}
         </p>
       </div>
 
-      <div className="absolute inset-x-5 bottom-8 flex justify-between">
-        <span className="label">No. {memberNo ? String(memberNo).padStart(4, "0") : "····"}</span>
-        <span className="label opacity-60">Since {since}</span>
+      <div className="absolute inset-x-4 bottom-6 flex justify-between sm:inset-x-5 sm:bottom-8">
+        <span className="label text-[0.7rem] sm:text-xs">No. {memberNo ? String(memberNo).padStart(4, "0") : "····"}</span>
+        <span className="label text-[0.7rem] opacity-60 sm:text-xs">Since {since}</span>
       </div>
-      <div className="absolute inset-x-5 bottom-3 h-3" style={{ backgroundImage: barcode }} aria-hidden />
+      <div className="absolute inset-x-4 bottom-2.5 h-2.5 sm:inset-x-5 sm:bottom-3 sm:h-3" style={{ backgroundImage: barcode }} aria-hidden />
 
       {stamped && (
         <motion.span

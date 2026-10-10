@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark, faPlus, faMinus, faArrowRight, faUser } from "@fortawesome/free-solid-svg-icons";
 import { flavors } from "../../data/products";
 import { useAuth } from "../../store/auth";
 import logo from "../../assets/images/logo.png";
@@ -31,8 +33,9 @@ export default function MobileMenu({ open, onClose, links, navBg, navInk, lightI
               alt="Ember & Root"
               className={`h-9 w-auto transition-[filter] duration-300 ${lightInk ? "brightness-0 invert" : "mix-blend-multiply"}`}
             />
-            <button onClick={onClose} className="label border border-current px-4 py-2">
-              Close ×
+            <button onClick={onClose} className="label flex items-center gap-2 border border-current px-4 py-2">
+              <span>Close</span>
+              <FontAwesomeIcon icon={faXmark} className="text-xs" aria-hidden />
             </button>
           </div>
 
@@ -44,7 +47,9 @@ export default function MobileMenu({ open, onClose, links, navBg, navInk, lightI
               >
                 <span className="label opacity-50">01</span>
                 <span className="display text-5xl">Shop</span>
-                <span className="label ml-auto">{shop ? "–" : "+"}</span>
+                <span className="ml-auto text-sm opacity-75">
+                  <FontAwesomeIcon icon={shop ? faMinus : faPlus} />
+                </span>
               </button>
 
               <AnimatePresence initial={false}>
@@ -69,18 +74,21 @@ export default function MobileMenu({ open, onClose, links, navBg, navInk, lightI
                       </li>
                     ))}
                     <li>
-                      <Link to="/shop" onClick={onClose} className="hair label block py-4">
-                        View all sauces →
+                      <Link to="/shop" onClick={onClose} className="hair label flex items-center justify-between py-4">
+                        <span>View all sauces</span>
+                        <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
                       </Link>
                     </li>
                     <li>
                       <Link to="/shop/trio" onClick={onClose} className="hair flex items-center justify-between py-4">
-                        <span>The Trio Box</span><span aria-hidden>→</span>
+                        <span>The Trio Box</span>
+                        <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
                       </Link>
                     </li>
                     <li>
                       <Link to="/shop/gifts" onClick={onClose} className="hair flex items-center justify-between py-4">
-                        <span>Gift sets</span><span aria-hidden>→</span>
+                        <span>Gift sets</span>
+                        <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
                       </Link>
                     </li>
                   </motion.ul>
@@ -99,14 +107,17 @@ export default function MobileMenu({ open, onClose, links, navBg, navInk, lightI
             <li className="hair">
               <Link to={user ? "/account" : "/auth"} onClick={onClose} className="flex items-baseline gap-4 py-4">
                 <span className="label opacity-50">05</span>
-                <span className="display text-5xl">{user ? "Account" : "Sign in"}</span>
+                <span className="display flex items-center gap-3 text-5xl">
+                  <FontAwesomeIcon icon={faUser} className="text-2xl opacity-60" aria-hidden />
+                  <span>{user ? "Account" : "Sign in"}</span>
+                </span>
               </Link>
             </li>
             <li className="hair" />
           </ul>
 
           <p className="label mt-auto px-5 py-6 opacity-60">
-            Ember & Root / Slow-grown heat
+            Ember &amp; Root / Slow-grown heat
           </p>
         </motion.div>
       )}

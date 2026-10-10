@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { heatLevels } from "../../data/shop";
 
 export function HeatFilter({ active, counts, toggle, clear }) {
@@ -6,8 +8,9 @@ export function HeatFilter({ active, counts, toggle, clear }) {
       <div className="flex items-baseline justify-between gap-4">
         <p className="label opacity-60">Heat</p>
         {active.length > 0 && (
-          <button type="button" onClick={clear} className="label border-b border-current pb-0.5">
-            Clear
+          <button type="button" onClick={clear} className="label inline-flex items-center gap-1.5 border-b border-current pb-0.5">
+            <FontAwesomeIcon icon={faRotateRight} className="text-[10px]" aria-hidden />
+            <span>Clear</span>
           </button>
         )}
       </div>

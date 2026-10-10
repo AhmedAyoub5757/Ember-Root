@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { bottleFor } from "../../lib/assets";
 import { MESSAGE_MAX } from "../../data/bundles";
 import { cleanMessage, fmt, resolveItem } from "../../lib/money";
@@ -68,8 +70,11 @@ export default function GiftPanel({ definition, message, onMessage, added, onAdd
               onClick={onAdd}
               className="label mt-7 flex h-14 w-full items-center justify-between bg-soil px-5 text-paper transition-transform hover:-translate-y-0.5"
             >
-              <span>{added ? "Added ✓" : "Add gift set to cart"}</span>
-              {!added && <span aria-hidden>→</span>}
+              <span className="flex items-center gap-2">
+                <span>{added ? "Added to cart" : "Add gift set to cart"}</span>
+                {added && <FontAwesomeIcon icon={faCheck} className="text-xs" aria-hidden />}
+              </span>
+              {!added && <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />}
             </button>
             <p className="label mt-3 opacity-60">Ships in kraft paper with your card tucked inside. {fmt(line.unit)}.</p>
           </div>

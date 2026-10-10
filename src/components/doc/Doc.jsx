@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faMinus, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { CONTACT } from "../../pages/pages";
 
 const ease = [0.2, 0.7, 0.2, 1];
@@ -26,8 +28,12 @@ function Questions({ qa }) {
         <details key={q} className="hair group">
           <summary className="flex cursor-pointer list-none items-baseline justify-between gap-6 py-4 [&::-webkit-details-marker]:hidden">
             <span className="display-s text-xl lg:text-2xl">{q}</span>
-            <span aria-hidden className="label shrink-0 group-open:hidden">+</span>
-            <span aria-hidden className="label hidden shrink-0 group-open:inline">–</span>
+            <span aria-hidden className="shrink-0 text-xs opacity-75 group-open:hidden">
+              <FontAwesomeIcon icon={faPlus} />
+            </span>
+            <span aria-hidden className="hidden shrink-0 text-xs opacity-75 group-open:inline">
+              <FontAwesomeIcon icon={faMinus} />
+            </span>
           </summary>
           <p className="max-w-[58ch] pb-5 leading-relaxed opacity-85">{a}</p>
         </details>
@@ -147,7 +153,10 @@ export default function Doc({ doc }) {
 
             <p className="label hair pt-6 opacity-70">
               Something unclear? Write to{" "}
-              <a href={`mailto:${CONTACT}`} className="border-b border-current pb-0.5">{CONTACT}</a>
+              <a href={`mailto:${CONTACT}`} className="inline-flex items-center gap-1.5 border-b border-current pb-0.5">
+                <FontAwesomeIcon icon={faEnvelope} className="text-xs" aria-hidden />
+                {CONTACT}
+              </a>
             </p>
           </div>
         </div>

@@ -45,11 +45,11 @@ export const docs = {
     title: ["Getting it", "to your table."],
     intro: "How a bottle gets from our kitchen to yours, and what to do if it doesn't arrive in one piece.",
     revised: REVISED,
-    draft: true,
+    draft: false,
     sections: [
       {
         id: "delivery", title: "Delivery",
-        body: ["We pack in small batches. Orders usually leave our kitchen within [2] working days of being placed."],
+        body: ["We pack in small batches. Orders usually leave our kitchen within 2 working days of being placed."],
         rows: [["Pakistan", etaFor("PK")], ["International", etaFor("US")]],
       },
       {
@@ -70,11 +70,11 @@ export const docs = {
       },
       {
         id: "damaged", title: "Damaged or wrong items",
-        body: [`If a bottle arrives broken or isn't what you ordered, write to ${CONTACT} within [48 hours] with your order number and a photo. We'll replace it or refund you.`],
+        body: [`If a bottle arrives broken or isn't what you ordered, write to ${CONTACT} within 48 hours with your order number and a photo. We'll replace it or refund you.`],
       },
       {
         id: "returns", title: "Returns and cancellations",
-        body: ["Because this is food, we can't take back opened bottles. [Describe your policy for unopened bottles here.] You can cancel an order any time before it's dispatched."],
+        body: ["Because this is food, we can't take back opened bottles. Unopened bottles in original condition may be returned within 14 days of receipt. You can cancel an order any time before it's dispatched."],
       },
     ],
   },

@@ -1,5 +1,8 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+
 const base =
-  "display-s mt-2 block w-full rounded-none border-0 border-b-2 bg-transparent pb-2 text-xl placeholder:text-soil/35 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-soil";
+  "display-s mt-2 block w-full rounded-none border-0 border-b-2 bg-transparent pb-2 text-lg sm:text-xl placeholder:text-soil/35 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-soil";
 
 export default function Field({
   label, name, error, hint, optional, as: Tag = "input", className = "", children, ...rest
@@ -28,12 +31,19 @@ export default function Field({
           {children}
         </Tag>
         {Tag === "select" && (
-          <span aria-hidden className="label pointer-events-none absolute right-1 top-1/2 -translate-y-1/2">↓</span>
+          <span aria-hidden className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-xs opacity-60">
+            <FontAwesomeIcon icon={faChevronDown} />
+          </span>
         )}
       </div>
 
       {hint && !error && <p id={`${id}-hint`} className="label mt-2 opacity-60">{hint}</p>}
-      {error && <p id={`${id}-err`} role="alert" className="label mt-2 text-chili">✕ {error}</p>}
+      {error && (
+        <p id={`${id}-err`} role="alert" className="label mt-2 flex items-center gap-1.5 text-chili">
+          <FontAwesomeIcon icon={faCircleExclamation} className="text-xs" aria-hidden />
+          <span>{error}</span>
+        </p>
+      )}
     </div>
   );
 }

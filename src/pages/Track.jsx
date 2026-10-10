@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { api } from "../lib/api";
 import Field from "../components/checkout/Field";
 
@@ -81,7 +83,12 @@ export default function Track() {
             />
           </div>
 
-          {error && <p role="alert" className="label mt-6 text-chili">✕ {error}</p>}
+          {error && (
+            <p role="alert" className="label mt-6 flex items-center gap-1.5 text-chili">
+              <FontAwesomeIcon icon={faCircleExclamation} className="text-xs" aria-hidden />
+              <span>{error}</span>
+            </p>
+          )}
 
           <button
             type="submit"
@@ -89,7 +96,7 @@ export default function Track() {
             className="label mt-8 flex h-14 w-full items-center justify-between bg-soil px-6 text-paper transition-colors duration-200 hover:bg-chili disabled:opacity-60"
           >
             <span>{busy ? "Looking…" : "Open my order slip"}</span>
-            <span aria-hidden>→</span>
+            <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
           </button>
           <p className="label mt-4 opacity-60">The order number is printed on your slip, top right.</p>
         </form>

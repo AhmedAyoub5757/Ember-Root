@@ -1,5 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { PaymentElement } from "@stripe/react-stripe-js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { methods } from "../../data/checkout";
 import { COD_FEE, PKR_PER_USD, fmt, fmtUsd } from "../../lib/money";
 
@@ -35,8 +37,9 @@ export default function Payment({ method, setMethod, country, usd, stripeOn }) {
             }}
           />
         ) : (
-          <p className="label border border-dashed border-soil/50 p-4 text-chili">
-            Card form unavailable. Add VITE_STRIPE_PUBLISHABLE_KEY to .env.local and restart.
+          <p className="label flex items-center gap-2 border border-dashed border-soil/50 p-4 text-chili">
+            <FontAwesomeIcon icon={faCircleExclamation} className="text-sm shrink-0" />
+            <span>Card form unavailable. Add VITE_STRIPE_PUBLISHABLE_KEY to .env.local and restart.</span>
           </p>
         )}
         <p className="label mt-5 opacity-70">
@@ -81,7 +84,7 @@ export default function Payment({ method, setMethod, country, usd, stripeOn }) {
               aria-checked={on}
               tabIndex={on ? 0 : -1}
               onClick={() => setMethod(m.id)}
-              className="hair relative grid w-full min-w-0 grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-x-2 px-2 py-4 text-left transition-colors duration-300 sm:grid-cols-[2.5rem_minmax(0,1fr)_auto] sm:gap-x-3 sm:px-3"
+              className="hair relative grid w-full min-w-0 grid-cols-[1.75rem_minmax(0,1fr)_auto] items-center gap-x-2 px-2.5 py-3.5 text-left transition-colors duration-300 sm:grid-cols-[2.5rem_minmax(0,1fr)_auto] sm:gap-x-3 sm:px-3 sm:py-4"
               style={on ? { color: "#F2EBDD" } : undefined}
             >
               {on && (
@@ -91,12 +94,12 @@ export default function Payment({ method, setMethod, country, usd, stripeOn }) {
                   transition={{ duration: 0.4, ease }}
                 />
               )}
-              <span className="label relative">{String(i + 1).padStart(2, "0")}</span>
-              <span className="relative">
-                <span className="display-s block text-2xl">{m.name}</span>
-                <span className="label mt-0.5 block opacity-70">{m.via}</span>
+              <span className="label relative text-xs sm:text-sm">{String(i + 1).padStart(2, "0")}</span>
+              <span className="relative min-w-0">
+                <span className="display-s block truncate text-xl sm:text-2xl">{m.name}</span>
+                <span className="label mt-0.5 block truncate text-xs opacity-70 sm:text-sm">{m.via}</span>
               </span>
-              <span className="label relative max-w-[7rem] text-right text-[0.62rem] leading-tight opacity-70 sm:max-w-none sm:whitespace-nowrap sm:text-[0.7rem]">
+              <span className="label relative shrink-0 text-right text-[0.65rem] leading-tight opacity-70 sm:whitespace-nowrap sm:text-[0.7rem]">
                 {m.demo ? "Coming soon" : m.id === "cod" && COD_FEE > 0 ? `+ ${fmt(COD_FEE)}` : "No fee"}
               </span>
             </button>

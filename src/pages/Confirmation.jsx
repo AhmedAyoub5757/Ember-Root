@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useParams, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight, faPrint } from "@fortawesome/free-solid-svg-icons";
 import { countryName, methodName } from "../data/checkout";
 import { fmt, fmtUsd } from "../lib/money";
 import { zigzag } from "../lib/zigzag";
@@ -131,10 +133,16 @@ export default function Confirmation() {
               to="/"
               className="label inline-flex items-center gap-3 border border-soil bg-soil px-6 py-4 text-paper transition-colors duration-200 hover:border-chili hover:bg-chili"
             >
-              Keep browsing <span aria-hidden>→</span>
+              <span>Keep browsing</span>
+              <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
             </Link>
-            <button type="button" onClick={() => window.print()} className="label border-b border-current pb-1">
-              Print slip
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="label inline-flex items-center gap-2 border-b border-current pb-1"
+            >
+              <FontAwesomeIcon icon={faPrint} className="text-xs" aria-hidden />
+              <span>Print slip</span>
             </button>
             <Link to="/contact" className="label border-b border-current pb-1">Write to us</Link>
           </div>

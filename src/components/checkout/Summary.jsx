@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBagShopping, faChevronDown, faChevronUp, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { etaFor } from "../../data/checkout";
 import { bottleFor } from "../../lib/assets";
 import { fmt } from "../../lib/money";
@@ -26,21 +28,26 @@ export default function Summary({ lines, q, country }) {
         type="button"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className="label flex w-full items-center justify-between gap-4 px-5 py-4 lg:hidden"
+        className="label flex w-full items-center justify-between gap-3 px-4 py-3.5 transition-colors hover:bg-soil/5 sm:px-5 sm:py-4 lg:hidden"
       >
-        <span>{open ? "Hide" : "Show"} order summary ({q.count})</span>
-        <span className="display-s text-xl normal-case">{fmt(q.total)}</span>
+        <span className="flex items-center gap-2.5">
+          <FontAwesomeIcon icon={faBagShopping} className="text-xs opacity-75" />
+          <span>{open ? "Hide" : "Show"} order summary ({q.count})</span>
+          <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} className="text-[10px] opacity-60" />
+        </span>
+        <span className="display-s text-lg normal-case sm:text-xl">{fmt(q.total)}</span>
       </button>
 
-      <div className={`${open ? "block" : "hidden"} px-5 pb-6 pt-2 lg:block lg:p-7`}>
+      <div className={`${open ? "block" : "hidden"} px-4 pb-5 pt-2 sm:px-5 sm:pb-6 lg:block lg:p-7`}>
         <div className="hidden items-baseline justify-between lg:flex">
           <p className="label opacity-60">Order slip · {String(q.count).padStart(2, "0")} items</p>
           <button
             type="button"
             onClick={() => useCart.getState().open()}
-            className="label border-b border-current pb-0.5"
+            className="label inline-flex items-center gap-1.5 border-b border-current pb-0.5"
           >
-            Edit
+            <FontAwesomeIcon icon={faPenToSquare} className="text-[10px]" aria-hidden />
+            <span>Edit</span>
           </button>
         </div>
 

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { animate, motion, useMotionValue, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faMinus, faBars, faBagShopping } from "@fortawesome/free-solid-svg-icons";
 import { flavors } from "../../data/products";
 import { useCart } from "../../store/cart";
 import { inkFor, mixColors, parseColor } from "../../lib/color";
@@ -167,7 +169,9 @@ export default function Navbar() {
               >
                 <span className="label opacity-50">01</span>
                 <span className="display text-xl tracking-normal">Shop</span>
-                <span className="label w-3">{megaOpen ? "–" : "+"}</span>
+                <span className="w-3 text-xs opacity-75">
+                  <FontAwesomeIcon icon={megaOpen ? faMinus : faPlus} />
+                </span>
               </button>
 
               {links.map((l) => (
@@ -192,9 +196,12 @@ export default function Navbar() {
               <AccountLink />
               <button
                 onClick={() => useCart.getState().toggle()}
-                className="label flex h-10 items-center gap-3 border border-current pl-4 transition-colors hover:bg-[color:var(--hover-bg)]"
+                className="label flex h-10 items-center border border-current pl-3.5 transition-colors hover:bg-[color:var(--hover-bg)]"
               >
-                Cart
+                <span className="flex items-center gap-2 pr-3">
+                  <FontAwesomeIcon icon={faBagShopping} className="text-xs" aria-hidden />
+                  <span>Cart</span>
+                </span>
                 <span
                   className="flex h-full min-w-10 items-center justify-center border-l border-current px-2"
                   aria-label={`${count} items in cart`}
@@ -205,9 +212,11 @@ export default function Navbar() {
 
               <button
                 onClick={() => setMobileOpen(true)}
-                className="label h-10 border border-current px-4 lg:hidden"
+                className="label flex h-10 items-center gap-2 border border-current px-3.5 lg:hidden"
+                aria-label="Open navigation menu"
               >
-                Menu +
+                <span>Menu</span>
+                <FontAwesomeIcon icon={faBars} className="text-xs" aria-hidden />
               </button>
             </div>
           </div>

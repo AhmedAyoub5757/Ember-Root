@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { api } from "../lib/api";
 import Field from "../components/checkout/Field";
 
@@ -169,7 +171,8 @@ export default function Contact() {
                       to="/"
                       className="label inline-flex items-center gap-2 border border-soil bg-soil px-6 py-3 text-paper transition-colors duration-200 hover:bg-chili hover:border-chili"
                     >
-                      Back to cellar <span aria-hidden>→</span>
+                      <span>Back to cellar</span>
+                      <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
                     </Link>
                   </div>
                 </motion.div>
@@ -277,7 +280,7 @@ export default function Contact() {
                       className="label flex h-14 w-full items-center justify-between border border-soil bg-soil px-6 text-paper transition-colors duration-200 hover:border-chili hover:bg-chili disabled:opacity-60"
                     >
                       <span>{busy ? "Sealing and sending…" : "Send dispatch note"}</span>
-                      <span aria-hidden>→</span>
+                      <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
                     </button>
                   </div>
                 </motion.form>
@@ -300,9 +303,10 @@ export default function Contact() {
                 <p className="label opacity-60">Direct Dispatch Email</p>
                 <a
                   href="mailto:kitchen@emberandroot.com"
-                  className="display-s mt-1 block text-lg font-medium hover:underline"
+                  className="display-s mt-1 inline-flex items-center gap-2 text-lg font-medium hover:underline"
                 >
-                  kitchen@emberandroot.com
+                  <FontAwesomeIcon icon={faEnvelope} className="text-xs opacity-75" aria-hidden />
+                  <span>kitchen@emberandroot.com</span>
                 </a>
               </div>
 
@@ -317,11 +321,13 @@ export default function Contact() {
               <div>
                 <p className="label opacity-60">Already have an order in transit?</p>
                 <div className="mt-2 flex flex-wrap gap-4">
-                  <Link to="/track" className="label border-b border-soil pb-0.5 hover:text-chili">
-                    Track your order slip →
+                  <Link to="/track" className="label inline-flex items-center gap-1.5 border-b border-soil pb-0.5 hover:text-chili">
+                    <span>Track your order slip</span>
+                    <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
                   </Link>
-                  <Link to="/faq" className="label border-b border-soil pb-0.5 hover:text-chili">
-                    Read the FAQ →
+                  <Link to="/faq" className="label inline-flex items-center gap-1.5 border-b border-soil pb-0.5 hover:text-chili">
+                    <span>Read the FAQ</span>
+                    <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
                   </Link>
                 </div>
               </div>

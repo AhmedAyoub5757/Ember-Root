@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMinus, faPlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { bottleFor } from "../../lib/assets";
 import { fmt, resolveItem } from "../../lib/money";
 import { useCart } from "../../store/cart";
@@ -103,9 +105,9 @@ export default function CartLine({ item, f, n, onNavigate }) {
               aria-label={`Decrease quantity of ${line.name}`}
               disabled={line.qty <= 1}
               onClick={() => setQty(line.key, line.qty - 1)}
-              className="h-9 w-9 disabled:opacity-30"
+              className="flex h-9 w-9 items-center justify-center disabled:opacity-30"
             >
-              −
+              <FontAwesomeIcon icon={faMinus} className="text-[10px]" />
             </button>
             <span className="w-8 text-center tabular-nums" aria-live="polite">
               {String(line.qty).padStart(2, "0")}
@@ -115,18 +117,19 @@ export default function CartLine({ item, f, n, onNavigate }) {
               aria-label={`Increase quantity of ${line.name}`}
               disabled={line.qty >= 12}
               onClick={() => setQty(line.key, line.qty + 1)}
-              className="h-9 w-9 disabled:opacity-30"
+              className="flex h-9 w-9 items-center justify-center disabled:opacity-30"
             >
-              +
+              <FontAwesomeIcon icon={faPlus} className="text-[10px]" />
             </button>
           </div>
 
           <button
             type="button"
             onClick={() => remove(line.key)}
-            className="label border-b border-current pb-0.5 opacity-70 transition-opacity hover:opacity-100"
+            className="label inline-flex items-center gap-1.5 border-b border-current pb-0.5 opacity-70 transition-opacity hover:opacity-100"
           >
-            Remove
+            <FontAwesomeIcon icon={faTrashCan} className="text-xs" />
+            <span>Remove</span>
           </button>
         </div>
       </div>

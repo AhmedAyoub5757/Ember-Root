@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Mail, Package, Users, Utensils } from "lucide-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUpRightFromSquare, faEnvelope, faBox, faUsers, faUtensils } from "@fortawesome/free-solid-svg-icons";
 import { api } from "../lib/api";
 import { useAuth } from "../store/auth";
 
@@ -18,7 +19,7 @@ function fadeUp(delay = 0) {
   };
 }
 
-function StatCard({ icon: Icon, label, value, detail, delay, accent = "soil" }) {
+function StatCard({ icon, label, value, detail, delay, accent = "soil" }) {
   const accentClass = {
     soil: "bg-soil text-paper",
     "paper-dark": "bg-paper-dark text-soil",
@@ -32,7 +33,7 @@ function StatCard({ icon: Icon, label, value, detail, delay, accent = "soil" }) 
     >
       <div className="flex items-start justify-between">
         <span className="label opacity-65">{label}</span>
-        <Icon size={18} strokeWidth={1.5} aria-hidden />
+        <FontAwesomeIcon icon={icon} className="text-base opacity-80" aria-hidden />
       </div>
       <p className="display-s mt-8 text-4xl font-medium">{value}</p>
       <p className="label mt-2 opacity-60">{detail}</p>
@@ -156,15 +157,21 @@ export default function Dashboard() {
         </motion.div>
 
         <div className="mt-14 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:mt-20">
-          <StatCard icon={Package} label="Gross revenue" value={money(revenue)} detail={`${data.orders.length} recorded orders`} delay={.1} />
-          <StatCard icon={Utensils} label="Order slips" value={data.orders.length} detail="Across every status" delay={.17} accent="paper-dark" />
-          <StatCard icon={Mail} label="Inbox" value={data.contacts.length} detail="Customer messages" delay={.24} accent="chili" />
-          <StatCard icon={Users} label="Community" value={data.subscribers.length + data.users.length} detail={`${data.subscribers.length} subscribers · ${data.users.length} accounts`} delay={.31} accent="leaf" />
+          <StatCard icon={faBox} label="Gross revenue" value={money(revenue)} detail={`${data.orders.length} recorded orders`} delay={.1} />
+          <StatCard icon={faUtensils} label="Order slips" value={data.orders.length} detail="Across every status" delay={.17} accent="paper-dark" />
+          <StatCard icon={faEnvelope} label="Inbox" value={data.contacts.length} detail="Customer messages" delay={.24} accent="chili" />
+          <StatCard icon={faUsers} label="Community" value={data.subscribers.length + data.users.length} detail={`${data.subscribers.length} subscribers · ${data.users.length} accounts`} delay={.31} accent="leaf" />
         </div>
 
         <div className="mt-12 grid grid-cols-12 gap-8">
           <motion.div {...fadeUp(.38)} className="col-span-12 border border-soil/20 bg-paper-dark/45 p-5 lg:col-span-8 lg:p-8">
-            <div className="flex items-end justify-between"><div><p className="label opacity-55">Seven day pulse</p><h2 className="display-s mt-2 text-3xl">Revenue flow</h2></div><ArrowUpRight size={21} strokeWidth={1.5} /></div>
+            <div className="flex items-end justify-between">
+              <div>
+                <p className="label opacity-55">Seven day pulse</p>
+                <h2 className="display-s mt-2 text-3xl">Revenue flow</h2>
+              </div>
+              <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="text-lg opacity-70" aria-hidden />
+            </div>
             <RevenueChart orders={data.orders} />
           </motion.div>
           <motion.div {...fadeUp(.45)} className="col-span-12 border border-soil/20 p-5 lg:col-span-4 lg:p-8">

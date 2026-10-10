@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { flavors } from "../data/products";
 import { heroSlides } from "../data/hero";
 import { flavorMeta } from "../data/flavorMeta";
@@ -169,8 +171,9 @@ function View({ i }) {
               <p className="display-s truncate text-lg">{f.name}</p>
               <p className="label opacity-70">{size.ml} ml · {fmt(unitPrice(f, size.id) * qty)}</p>
             </div>
-            <button type="button" onClick={onAdd} className="label shrink-0 border border-current px-5 py-3">
-              {added ? "Added ✓" : "Add →"}
+            <button type="button" onClick={onAdd} className="label inline-flex shrink-0 items-center gap-2 border border-current px-5 py-3">
+              <span>{added ? "Added" : "Add"}</span>
+              <FontAwesomeIcon icon={added ? faCheck : faArrowRight} className="text-xs" aria-hidden />
             </button>
           </motion.div>
         )}

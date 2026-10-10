@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { fmt, unitPrice } from "../../lib/money";
 import HeatRuler from "../ui/HeatRuler";
 
@@ -32,7 +34,16 @@ export default function Picker({ flavors, size, picks, onToggle }) {
               <span className="hidden sm:block"><HeatRuler level={flavor.heat} color={flavor.color} /></span>
               <span className="display-s hidden text-right text-lg tabular-nums sm:block">{fmt(unitPrice(flavor, size.id))}</span>
               <span className="label justify-self-end text-right">
-                {chosen ? `✓ Slot ${String(slot + 1).padStart(2, "0")}` : disabled ? "Full" : "+"}
+                {chosen ? (
+                  <span className="inline-flex items-center gap-1.5 text-chili font-medium">
+                    <FontAwesomeIcon icon={faCheck} className="text-xs" aria-hidden />
+                    <span>Slot {String(slot + 1).padStart(2, "0")}</span>
+                  </span>
+                ) : disabled ? (
+                  "Full"
+                ) : (
+                  <FontAwesomeIcon icon={faPlus} className="text-xs opacity-60" />
+                )}
               </span>
             </button>
           );

@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Elements, useElements, useStripe } from "@stripe/react-stripe-js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight, faCircleExclamation, faBagShopping } from "@fortawesome/free-solid-svg-icons";
 import { countries, methods, provinces } from "../data/checkout";
 import { fmt, quote, resolveItem, toUsdCents } from "../lib/money";
 import { validate } from "../lib/validate";
@@ -212,17 +214,18 @@ function CheckoutForm() {
   /* ---------- empty cart ---------- */
   if (lines.length === 0 && !done.current) {
     return (
-      <div className="px-5 py-24 lg:px-8">
+      <div className="px-4 py-20 sm:px-5 sm:py-24 lg:px-8">
         <div className="mx-auto max-w-[1400px]">
           <p className="label opacity-60">Checkout</p>
-          <h1 className="display mt-4 text-[clamp(3.5rem,9vw,8rem)] font-semibold">
+          <h1 className="display mt-4 text-[clamp(2.5rem,8vw,7rem)] font-semibold">
             Nothing<br />to settle.
           </h1>
           <p className="mt-6 max-w-[38ch] leading-relaxed opacity-80">
             Your order slip is empty. Pick a bottle first and we'll hold the table.
           </p>
           <Link to="/shop" className="label mt-8 inline-flex items-center gap-3 border border-soil bg-soil px-6 py-4 text-paper transition-colors hover:border-chili hover:bg-chili">
-            Browse the sauces <span aria-hidden>→</span>
+            <span>Browse the sauces</span>
+            <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
           </Link>
         </div>
       </div>
@@ -239,14 +242,17 @@ function CheckoutForm() {
     <div className="px-4 pb-24 pt-8 sm:px-5 lg:px-8 lg:pt-14">
       <div className="mx-auto max-w-[1400px]">
         <div>
-          <p className="label flex flex-wrap gap-x-3 opacity-70">
-            <button type="button" onClick={() => useCart.getState().open()} className="hover:underline">Cart</button>
+          <p className="label flex flex-wrap items-center gap-x-3 gap-y-1 opacity-70">
+            <button type="button" onClick={() => useCart.getState().open()} className="inline-flex items-center gap-1.5 hover:underline">
+              <FontAwesomeIcon icon={faBagShopping} className="text-xs" aria-hidden />
+              <span>Cart</span>
+            </button>
             <span aria-hidden>/</span>
             <span aria-current="step" className="opacity-100">Checkout</span>
             <span aria-hidden>/</span>
             <span className="opacity-60">Confirmation</span>
           </p>
-          <h1 className="display mt-4 text-[clamp(3.2rem,8vw,7rem)] font-semibold">
+          <h1 className="display mt-4 text-[clamp(2.4rem,7vw,6.5rem)] font-semibold">
             {["Settle", "the slip."].map((t, i) => (
               <span key={t} className={`block overflow-hidden pb-[0.12em] ${i ? "lg:pl-[8vw]" : ""}`}>
                 <motion.span
@@ -263,15 +269,16 @@ function CheckoutForm() {
         </div>
 
         <div className="mt-8 grid grid-cols-12 gap-x-12 gap-y-8 sm:mt-10 lg:mt-14">
-          <aside className="order-2 col-span-12 min-w-0 lg:order-2 lg:col-span-5">
+          {/* On mobile, order summary is on top (collapsible accordion), on desktop on the right */}
+          <aside className="order-1 col-span-12 min-w-0 lg:order-2 lg:col-span-5">
             <div className="lg:sticky lg:top-[128px]">
               <Summary lines={lines} q={q} country={v.country} />
             </div>
           </aside>
 
-          <form onSubmit={submit} noValidate className="order-1 col-span-12 min-w-0 lg:order-1 lg:col-span-7">
+          <form onSubmit={submit} noValidate className="order-2 col-span-12 min-w-0 lg:order-1 lg:col-span-7">
             <Section no="01" title="Contact">
-              <div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
+              <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2 sm:gap-y-7">
                 <Field label="Full name" autoComplete="name" className="sm:col-span-2" {...bind("name")} />
                 <Field label="Email" type="email" inputMode="email" autoComplete="email" placeholder="you@yourtable.com" {...bind("email")} />
                 <Field
@@ -286,7 +293,7 @@ function CheckoutForm() {
             </Section>
 
             <Section no="02" title="Delivery">
-              <div className="grid gap-x-8 gap-y-7 sm:grid-cols-2">
+              <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2 sm:gap-y-7">
                 <Field label="Country" as="select" autoComplete="country" className="sm:col-span-2" {...bind("country")} onChange={setCountry}>
                   {countries.map(([code, name]) => (
                     <option key={code} value={code}>{name}</option>
@@ -331,18 +338,21 @@ function CheckoutForm() {
             </Section>
 
             {errors.form && (
-              <p role="alert" className="label mb-4 text-chili">✕ {errors.form}</p>
+              <p role="alert" className="label mb-4 flex items-center gap-2 text-chili">
+                <FontAwesomeIcon icon={faCircleExclamation} className="text-sm shrink-0" aria-hidden />
+                <span>{errors.form}</span>
+              </p>
             )}
 
             <button
               type="submit"
               disabled={sending}
-              className="label flex h-16 w-full items-center justify-between gap-4 bg-soil px-4 text-paper transition-colors duration-200 hover:bg-chili disabled:opacity-60 sm:px-6"
+              className="label flex h-16 w-full items-center justify-between gap-3 bg-soil px-4 text-paper transition-colors duration-200 hover:bg-chili disabled:opacity-60 sm:px-6"
             >
-              <span>{sending ? "Sealing the slip…" : cta}</span>
-              <span className="flex items-center gap-4">
-                {!sending && <span className="display-s text-xl normal-case">{fmt(q.total)}</span>}
-                <span aria-hidden>→</span>
+              <span className="truncate">{sending ? "Sealing the slip…" : cta}</span>
+              <span className="flex shrink-0 items-center gap-3 sm:gap-4">
+                {!sending && <span className="display-s text-lg normal-case sm:text-xl">{fmt(q.total)}</span>}
+                <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
               </span>
             </button>
 

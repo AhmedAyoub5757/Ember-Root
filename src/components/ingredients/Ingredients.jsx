@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { ingredients } from "../../data/ingredients";
 import { flavors } from "../../data/products";
 import { useMediaQuery } from "../../lib/useMediaQuery";
@@ -143,8 +145,14 @@ export default function Ingredients() {
               <div className="label mt-5 flex items-center justify-between">
                 <span>{String(index + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}</span>
                 <span className="flex gap-6">
-                  <button type="button" onClick={() => go(index - 1)} className="border-b border-current pb-1">← Prev</button>
-                  <button type="button" onClick={() => go(index + 1)} className="border-b border-current pb-1">Next →</button>
+                  <button type="button" onClick={() => go(index - 1)} className="inline-flex items-center gap-1.5 border-b border-current pb-1">
+                    <FontAwesomeIcon icon={faArrowLeft} className="text-xs" aria-hidden />
+                    <span>Prev</span>
+                  </button>
+                  <button type="button" onClick={() => go(index + 1)} className="inline-flex items-center gap-1.5 border-b border-current pb-1">
+                    <span>Next</span>
+                    <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
+                  </button>
                 </span>
               </div>
             </div>

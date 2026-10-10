@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark, faPlus, faMinus, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { bottleFor } from "../../lib/assets";
 import { fmt, resolveItem, totals } from "../../lib/money";
 import { useCart } from "../../store/cart";
@@ -94,8 +96,9 @@ export default function CartDrawer() {
                   Your order<span className="label ml-3 align-top opacity-60">{String(t.count).padStart(2, "0")}</span>
                 </h2>
               </div>
-              <button type="button" onClick={close} autoFocus className="label border border-soil px-4 py-2">
-                Close ×
+              <button type="button" onClick={close} autoFocus className="label flex items-center gap-2 border border-soil px-3.5 py-2">
+                <span>Close</span>
+                <FontAwesomeIcon icon={faXmark} className="text-xs" aria-hidden />
               </button>
             </header>
 
@@ -107,8 +110,9 @@ export default function CartDrawer() {
                 <p className="mt-5 max-w-[34ch] leading-relaxed opacity-80">
                   A bottle looks good on any table. Browse the sauces to start an order.
                 </p>
-                <Link to="/shop" className="label mt-8 inline-block self-start border-b border-current pb-1">
-                  Browse all sauces →
+                <Link to="/shop" className="label mt-8 inline-flex items-center gap-2 self-start border-b border-current pb-1">
+                  <span>Browse all sauces</span>
+                  <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
                 </Link>
               </div>
             ) : (
@@ -176,9 +180,9 @@ export default function CartDrawer() {
                                 aria-label={`Decrease quantity of ${line.name}`}
                                 disabled={line.qty <= 1}
                                 onClick={() => setQty(line.key, line.qty - 1)}
-                                className="h-8 w-7 disabled:opacity-30"
+                                className="flex h-8 w-7 items-center justify-center disabled:opacity-30"
                               >
-                                −
+                                <FontAwesomeIcon icon={faMinus} className="text-[10px]" />
                               </button>
                               <span className="w-7 text-center tabular-nums" aria-live="polite">
                                 {String(line.qty).padStart(2, "0")}
@@ -188,18 +192,18 @@ export default function CartDrawer() {
                                 aria-label={`Increase quantity of ${line.name}`}
                                 disabled={line.qty >= 12}
                                 onClick={() => setQty(line.key, line.qty + 1)}
-                                className="h-8 w-7 disabled:opacity-30"
+                                className="flex h-8 w-7 items-center justify-center disabled:opacity-30"
                               >
-                                +
+                                <FontAwesomeIcon icon={faPlus} className="text-[10px]" />
                               </button>
                             </div>
                             <button
                               type="button"
                               aria-label={`Remove ${line.name}`}
                               onClick={() => remove(line.key)}
-                              className="label shrink-0 px-1 opacity-60 transition-opacity hover:opacity-100"
+                              className="label flex shrink-0 items-center px-1.5 opacity-60 transition-opacity hover:opacity-100"
                             >
-                              ×
+                              <FontAwesomeIcon icon={faXmark} className="text-xs" />
                             </button>
                           </motion.li>
                         );
@@ -232,7 +236,7 @@ export default function CartDrawer() {
                     className="label mt-3 flex h-12 items-center justify-between bg-soil px-6 text-paper transition-colors duration-200 hover:bg-chili lg:mt-5 lg:h-14"
                   >
                     <span>Checkout</span>
-                    <span aria-hidden>→</span>
+                    <FontAwesomeIcon icon={faArrowRight} className="text-xs" aria-hidden />
                   </Link>
                   <button type="button" onClick={close} className="label mt-3 border-b border-current pb-0.5 lg:mt-4">
                     Keep browsing

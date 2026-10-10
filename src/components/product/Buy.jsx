@@ -1,4 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMinus, faPlus, faCheck, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { sizes } from "../../data/productExtra";
 import { fmt, unitPrice } from "../../lib/money";
 
@@ -75,9 +77,23 @@ export default function Buy({ f, ink, size, setSize, qty, setQty, added, onAdd, 
       {/* quantity + add */}
       <div className="mt-5 flex items-stretch gap-3">
         <div className="label flex items-center border border-current">
-          <button type="button" aria-label="Decrease quantity" onClick={() => setQty(Math.max(1, qty - 1))} className="h-14 w-12">−</button>
+          <button
+            type="button"
+            aria-label="Decrease quantity"
+            onClick={() => setQty(Math.max(1, qty - 1))}
+            className="flex h-14 w-12 items-center justify-center"
+          >
+            <FontAwesomeIcon icon={faMinus} className="text-xs" />
+          </button>
           <span className="w-10 text-center tabular-nums" aria-live="polite">{String(qty).padStart(2, "0")}</span>
-          <button type="button" aria-label="Increase quantity" onClick={() => setQty(Math.min(12, qty + 1))} className="h-14 w-12">+</button>
+          <button
+            type="button"
+            aria-label="Increase quantity"
+            onClick={() => setQty(Math.min(12, qty + 1))}
+            className="flex h-14 w-12 items-center justify-center"
+          >
+            <FontAwesomeIcon icon={faPlus} className="text-xs" />
+          </button>
         </div>
 
         <button
@@ -86,8 +102,11 @@ export default function Buy({ f, ink, size, setSize, qty, setQty, added, onAdd, 
           style={{ backgroundColor: ink, color: f.color }}
           className="label flex h-14 flex-1 items-center justify-between px-6 transition-transform duration-200 hover:-translate-y-0.5"
         >
-          <span>{added ? "Added to cart ✓" : "Add to cart"}</span>
-          <span aria-hidden>{added ? "" : "→"}</span>
+          <span className="flex items-center gap-2">
+            <span>{added ? "Added to cart" : "Add to cart"}</span>
+            {added && <FontAwesomeIcon icon={faCheck} className="text-xs" aria-hidden />}
+          </span>
+          <span aria-hidden>{!added && <FontAwesomeIcon icon={faArrowRight} className="text-xs" />}</span>
         </button>
       </div>
 
