@@ -73,7 +73,6 @@ export default function Letters() {
         {/* header */}
         <header className="grid grid-cols-12 gap-x-8 gap-y-8">
           <div className="col-span-12 lg:col-span-7">
-            <p className="label opacity-60">05 / Correspondence</p>
             <h2 className="display mt-5 text-[clamp(3.2rem,9vw,8.5rem)] font-semibold">
               {["Letters,", "received."].map((t, i) => (
                 <span key={t} className={`block overflow-hidden pb-[0.12em] ${i ? "lg:pl-[10vw]" : ""}`}>
@@ -145,11 +144,6 @@ export default function Letters() {
           {["left-2 top-2", "right-2 top-2", "left-2 bottom-2", "right-2 bottom-2"].map((c) => (
             <span key={c} aria-hidden className={`label pointer-events-none absolute opacity-50 ${c}`}>+</span>
           ))}
-
-          <div className="label mb-4 flex justify-between gap-6 opacity-60 lg:mb-10">
-            <span>Fig. 4 — Correspondence, Sept – Oct 2026</span>
-            <span>{isDesktop ? "Drag a letter · click to bring it forward" : "Swipe the tray →"}</span>
-          </div>
 
           <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-8 pt-4 lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-x-10 lg:gap-y-12 lg:snap-none lg:overflow-visible lg:p-0">
             {letters.map((l) => (

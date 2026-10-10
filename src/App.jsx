@@ -1,4 +1,5 @@
-import { Navigate, Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import Layout from "./components/layout/Layout";
 import Home from "./pages/Home";
 import Product from "./pages/Product";
@@ -37,8 +38,17 @@ export default function App() {
     useAuth.getState().load();
   }, []);
 
+  const location = useLocation();
+
   return (
-    <Routes>
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, transition: { duration: 0.35, ease: [0.2, 0.7, 0.2, 1] } }}
+        exit={{ opacity: 0, transition: { duration: 0.2 } }}
+      >
+      <Routes location={location}>
       <Route path="/auth" element={<Auth />} />
       <Route path="/login" element={<Navigate to="/auth" replace />} />
       <Route
@@ -90,6 +100,8 @@ export default function App() {
         <Route path="/account" element={<Account />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Route>
-    </Routes>
+      </Routes>
+      </motion.div>
+    </AnimatePresence>
   );
 }

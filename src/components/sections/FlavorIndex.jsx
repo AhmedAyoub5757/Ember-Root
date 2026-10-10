@@ -105,7 +105,6 @@ export default function FlavorIndex() {
         {/* header */}
         <header className="grid grid-cols-12 gap-x-8 gap-y-8">
           <div className="col-span-12 lg:col-span-8">
-            <p className="label opacity-60">02 / Index of varieties</p>
             <h2 className="display mt-5 text-[clamp(3.2rem,9vw,8.5rem)] font-semibold">
               {["Six varieties,", "one field."].map((t, i) => (
                 <span key={t} className={`block overflow-hidden pb-[0.12em] ${i ? "lg:pl-[12vw]" : ""}`}>
@@ -129,9 +128,6 @@ export default function FlavorIndex() {
               Every bottle starts as a single plant. Roasted, fermented or smoked
               slowly, and bottled in small batches. Pick a variety to see what
               went into it.
-            </p>
-            <p className="label mt-5 opacity-60">
-              {isDesktop ? "Hover a row to pull the specimen" : "Tap a row to open the specimen"}
             </p>
           </div>
         </header>

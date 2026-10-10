@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { BriefcaseBusiness, Code2, MessageCircle } from "lucide-react";
+import { motion } from "framer-motion";
 import { flavors } from "../../data/products";
 import Wordmark from "./Wordmark";
 
-// Replace with your real handles
 const cols = [
   ["Shop", [...flavors.map((f) => [f.name, `/flavor/${f.id}`]), ["All sauces", "/shop"]]],
   ["Learn", [["Our story", "/story"], ["Ingredients", "/ingredients"], ["Heat guide", "/heat-guide"], ["Write to us", "/contact"]]],
   ["Help", [["Shipping & returns", "/shipping"], ["FAQ", "/faq"], ["Track an order", "/track"], ["Contact", "/contact"]]],
-  ["Elsewhere", [["Instagram", "https://www.instagram.com/", true], ["TikTok", "https://www.tiktok.com/", true], ["WhatsApp", "https://wa.me/", true]]],
+  ["Elsewhere", [
+    ["GitHub", "https://github.com/AhmedAyoub5757/", true, Code2],
+    ["LinkedIn", "https://www.linkedin.com/in/ahmed-ayoub-dev", true, BriefcaseBusiness],
+    ["WhatsApp", "https://wa.me/", true, MessageCircle],
+  ]],
 ];
 
 const pay = ["Card (Stripe)", "PayPal", "Easypaisa", "Cash on delivery"];
@@ -43,14 +48,25 @@ function Ruler() {
   );
 }
 
-function FooterLink({ to, external, children }) {
+function FooterLink({ to, external, icon: Icon, children }) {
   const cls = "group inline-flex min-w-0 max-w-full items-baseline gap-2 break-words py-1 display-s text-xl lg:text-[1.35rem]";
   const inner = (
     <>
       <span className="transition-transform duration-300 group-hover:translate-x-1">{children}</span>
-      <span aria-hidden className="label opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-        {external ? "↗" : "→"}
-      </span>
+      {Icon ? (
+        <motion.span
+          aria-hidden
+          initial={{ opacity: 0, x: -4 }}
+          whileHover={{ opacity: 1, x: 0 }}
+          className="opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        >
+          <Icon size={18} strokeWidth={1.5} />
+        </motion.span>
+      ) : (
+        <span aria-hidden className="label opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          {external ? "↗" : "→"}
+        </span>
+      )}
     </>
   );
   return external ? (
@@ -79,10 +95,10 @@ export default function Footer() {
               Small-batch hot sauce, fermented in crocks and bottled by hand.
             </p>
             <a
-              href="mailto:hello@emberandroot.example"
+              href="mailto:ahmed42.dev@gmail.com"
               className="label mt-6 inline-block border-b border-current pb-1"
             >
-              hello@emberandroot.example
+              ahmed42.dev@gmail.com
             </a>
           </div>
 
@@ -91,9 +107,9 @@ export default function Footer() {
               <div key={title} className="min-w-0">
                 <p className="label opacity-60">{title}</p>
                 <ul className="mt-4">
-                  {items.map(([label, to, external]) => (
+                  {items.map(([label, to, external, icon]) => (
                     <li key={label}>
-                      <FooterLink to={to} external={external}>{label}</FooterLink>
+                      <FooterLink to={to} external={external} icon={icon}>{label}</FooterLink>
                     </li>
                   ))}
                 </ul>
@@ -125,7 +141,6 @@ export default function Footer() {
           </button>
         </div>
 
-        <p className="label mt-10 opacity-50">Run your cursor across the name. It runs warm.</p>
         <Wordmark />
         <p className="label pb-6 opacity-40">Set in Fraunces, Hanken Grotesk and IBM Plex Mono</p>
       </div>

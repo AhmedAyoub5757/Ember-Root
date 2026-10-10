@@ -1,7 +1,7 @@
 import { COD_FEE, FREE_SHIP, INTL_SHIP, SHIP_FEE, fmt } from "../lib/money";
 import { etaFor } from "../data/checkout";
 
-export const CONTACT = "hello@emberandroot.example"; // placeholder
+export const CONTACT = "ahmed42.dev@gmail.com";
 const REVISED = "9 October 2026";
 
 export const docs = {

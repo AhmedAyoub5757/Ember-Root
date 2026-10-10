@@ -34,7 +34,6 @@ export default function Newsletter() {
       <div className="mx-auto max-w-[1400px]">
         <header className="grid grid-cols-12 gap-x-0 gap-y-8 lg:gap-x-8">
           <div className="col-span-12 min-w-0 lg:col-span-8">
-            <p className="label opacity-70">06 / The next batch</p>
             <h2 className="display mt-5 text-[clamp(3.2rem,9vw,8.5rem)] font-semibold">
               {[`Batch ${BATCH.no} is`, "still asleep."].map((t, i) => (
                 <span key={t} className={`block overflow-hidden pb-[0.12em] ${i ? "lg:pl-[10vw]" : ""}`}>

@@ -63,7 +63,6 @@ export default function Ingredients() {
         {/* header */}
         <header className="grid grid-cols-12 gap-x-8 gap-y-8">
           <div className="col-span-12 lg:col-span-8">
-            <p className="label opacity-60">04 / Field notes</p>
             <h2 className="display mt-5 text-[clamp(3.2rem,9vw,8.5rem)] font-semibold">
               {["Five plants,", "pressed & named."].map((t, i) => (
                 <span key={t} className={`block overflow-hidden pb-[0.12em] ${i ? "lg:pl-[10vw]" : ""}`}>
@@ -86,7 +85,6 @@ export default function Ingredients() {
               Everything starts in a drawer. Open one to meet the plant, see where
               it grows and when it's picked, and find which sauces it ends up in.
             </p>
-            <p className="label mt-5 opacity-60">Pick a drawer · swipe the sheet</p>
           </div>
         </header>
 

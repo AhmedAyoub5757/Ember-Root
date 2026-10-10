@@ -8,7 +8,7 @@ import { validate } from "../lib/validate";
 import { api } from "../lib/api";
 import { appearance, fonts, stripePromise } from "../lib/stripe";
 import { useCart } from "../store/cart";
-import { DEMO, useOrder } from "../store/order";
+import { useOrder } from "../store/order";
 import { useAuth } from "../store/auth";
 import Field from "../components/checkout/Field";
 import Payment from "../components/checkout/Payment";
@@ -346,9 +346,6 @@ function CheckoutForm() {
               </span>
             </button>
 
-            {DEMO && (
-              <p className="label mt-4 opacity-70">Test mode · no real money moves. Orders go to your test database.</p>
-            )}
             <p className="label mt-3 opacity-60">
               By placing your order you agree to our{" "}
               <Link to="/terms" className="border-b border-current">Terms</Link> and{" "}

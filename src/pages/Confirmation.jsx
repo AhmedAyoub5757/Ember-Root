@@ -100,17 +100,10 @@ export default function Confirmation() {
             Thank you, {first}. A confirmation will go to <strong className="break-all font-semibold">{o.contact.email}</strong>.
           </p>
 
-          {DEMO && (
-            <>
-              <p role="status" className="label mt-6 inline-block border border-chili px-3 py-2 text-chili">
-                Test mode · no real money moved
-              </p>
-              {o.status === "pending" && (
-                <p role="status" className="label mt-6 inline-block border border-current px-3 py-2">
-                  {gaveUp ? "Still confirming. Refresh in a minute." : "Confirming your payment…"}
-                </p>
-              )}
-            </>
+          {DEMO && o.status === "pending" && (
+            <p role="status" className="label mt-6 inline-block border border-current px-3 py-2">
+              {gaveUp ? "Still confirming. Refresh in a minute." : "Confirming your payment…"}
+            </p>
           )}
 
           <p className="mt-6 max-w-[44ch] leading-relaxed opacity-85">{nextStep[o.method](o)}</p>
